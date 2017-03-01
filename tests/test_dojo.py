@@ -24,7 +24,7 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(len(self.dojo.all_rooms), 3, 'rooms added successfully')
         
     
-    def test_add_person_added(self):
+    def test_add_person_added_successfully(self):
         '''
         tests that all person(s) are added
         '''
