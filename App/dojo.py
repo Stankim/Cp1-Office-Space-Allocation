@@ -11,7 +11,7 @@ class Dojo(object):
         '''
         Create new rooms for person(s)
         '''
-        pass
+        
 
     def add_person(self, person_name, category, wants_accomodation = 'N'):
         '''
