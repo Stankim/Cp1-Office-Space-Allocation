@@ -6,6 +6,11 @@ Desc      : Office Allocator person module
 """
 class Person(object):
     
+    '''
+    This creates a Room object where the class Office
+    and Livingspace inherit from
+    '''    
+    
     def __init__(self, person_name, category):
         self.name = person_name
         self.category = category

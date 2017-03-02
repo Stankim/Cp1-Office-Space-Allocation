@@ -7,6 +7,7 @@ Desc      : Office Allocator model module
 # ============================================================================
 # necessary imports
 # ============================================================================
+import random
 from rooms import Livingspace, Office
 from person import Fellow, Staff
 
@@ -22,6 +23,7 @@ class Dojo(object):
         self.vacant_rooms = []
         self.vacant_offices = []
         self.vacant_livingspaces = []
+        self.allocated = []
 
     
     def create_room(self, name, type_room):
@@ -51,11 +53,12 @@ class Dojo(object):
                 if office not in self.vacant_offices:
                     self.vacant_offices.append(office)
                     self.vacant_rooms.append(office)
-            
+            # removes full rooms from list
             elif len(office.members) >= office.capacity:
                 if office in self.vacant_offices:
                     self.vacant_offices.remove(office)
                     self.vacant_rooms.remove(office)
+            #  checks for vacant rooms in livingspace       
         for livingspace in self.livingspace:
             if len(livingspace.members) < livingspace.capacity:
                 if livingspace not in self.vacant_livingspaces:
@@ -64,7 +67,49 @@ class Dojo(object):
                 elif len(livingspace.members) >= livingspace.capacity:
                     self.vacant_livingspaces.append(livingspace)
                     self.vacant_rooms.append(livingspace)
+        
+    def add_person(self, person_name, category, wants_accomodation='N'):
+        ''' Add new person and allocates a room by random'''
+        name = person_name
+        if wants_accomodation == 'N':
+            if category == 'Staff':
+                person = Staff(name)
+                self.staff.append(person)
+            elif category == 'Fellow':
+                person = Fellow(name)
+                self.fellows.append(person)
+        else:
+            if self.office:
+                self.check_vacant_room()
+                if not self.vacant_offices:
+                    msg = 'There no vacant rooms '
+                    print (msg)
+                    return
+                if category == 'Staff':
+                    office_select = random.choice(self.vacant_offices)
+                    person = Staff(name)
+                    office_select.members.append(person)
+                    self.all_rooms.append(person)
+                    msg = 'You have successfully allocated %s' % name 
+                    print (msg)
+                    print "  "
+                elif category == 'Fellow':
+                    office_select = random.choice(self.vacant_offices)
+                    person = Fellow(name)
+                    office_select.members.append(person)
+                    self.all_rooms.append(person)
+                    msg = 'You have successfully allocated %s' % name 
+                    print (msg)
+                    print "  "
+                self.all_rooms.append(person)
+            else:
+                print (' No offices found')
+                return
+
+        self.all_people.append(person)
                     
+
+
 
 
                 
