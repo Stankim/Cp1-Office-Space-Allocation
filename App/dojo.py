@@ -19,6 +19,9 @@ class Dojo(object):
         self.all_people = []
         self.livingspace = []
         self.office = []
+        self.vacant_rooms = []
+        self.vacant_offices = []
+        self.vacant_livingspaces = []
 
     
     def create_room(self, name, type_room):
@@ -41,11 +44,30 @@ class Dojo(object):
         else:
             return 'Invalid'
 
+    def check_vacant_room(self):
+        ''' checks for vacant rooms and adds to list'''
+        for office in self.office:
+            if len(office.members) < office.capacity:
+                if office not in self.vacant_offices:
+                    self.vacant_offices.append(office)
+                    self.vacant_rooms.append(office)
+            
+            elif len(office.members) >= office.capacity:
+                if office in self.vacant_offices:
+                    self.vacant_offices.remove(office)
+                    self.vacant_rooms.remove(office)
+        for livingspace in self.livingspace:
+            if len(livingspace.members) < livingspace.capacity:
+                if livingspace not in self.vacant_livingspaces:
+                    self.vacant_livingspaces.append(livingspace)
+                    self.vacant_rooms.append(livingspace)
+                elif len(livingspace.members) >= livingspace.capacity:
+                    self.vacant_livingspaces.append(livingspace)
+                    self.vacant_rooms.append(livingspace)
+                    
 
-    def add_person(self, person_name, category, wants_accomodation = 'N'):
-        
-        '''
-        Adds person(person name), category(Fellow/Staff)
-        '''
+
+                
+
 
 
