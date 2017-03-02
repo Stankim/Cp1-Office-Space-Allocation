@@ -22,6 +22,20 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('Black', 'office')
         self.dojo.create_room('Brown', 'office')
         self.assertEqual(len(self.dojo.all_rooms), 3, 'rooms added successfully')
+
+    def test_office_is_created(self):
+        '''test to confirm an office is created'''
+        office = self.dojo.office
+        self.assertEqual(len(office), 0)
+        self.dojo.create_room('green', 'office')
+        self.assertEqual(len(office), 1)
+        
+    def test_living_space_is_created(self):
+        '''test to confirm that living space is created'''
+        livingspace = self.dojo.livingspace
+        self.assertEqual(len(livingspace), 0)
+        self.dojo.create_room('crypton', 'livingspace')
+        self.assertEqual(len(livingspace), 1)
         
     
     def test_add_person_added_successfully(self):
@@ -53,3 +67,10 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('sonia', 'staff')
         self.assertEqual(len(self.dojo.all_people), 1, 'staff sucessfully added')
 
+    def test_person_is_allocated_a_room(self):
+        '''test if a person has been reallocated to a room'''
+        self.dojo.create_room('yellow', 'office')
+        self.dojo.add_person('pink', 'fellow')
+        person = self.dojo.fellows[0]
+        room_name = person.office.name
+        self.assertEqual(room_name, 'pink')
