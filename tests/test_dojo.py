@@ -55,8 +55,8 @@ class TestDojo(unittest.TestCase):
         '''
         self.dojo.create_room('brown', 'office')
         self.assertEqual(len(self.dojo.fellows), 0)
-        self.dojo.add_person('khalid', 'fellow', 'Y')
-        self.assertEqual(len(self.dojo.all_people), 1 , 'fellow successfully added')
+        self.dojo.add_person('khalid', 'Fellow', 'Y')
+        self.assertEqual(len(self.dojo.all_rooms), 1 , 'fellow successfully added')
 
     def test_staff_is_added_sucessfully(self):
         '''
@@ -67,10 +67,9 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('sonia', 'Staff', 'N')
         self.assertEqual(len(self.dojo.all_rooms), 1, 'staff sucessfully added')
 
-    # def test_person_is_allocated_a_room(self):
-    #     '''test if a person has been reallocated to a room'''
-    #     self.dojo.create_room('yellow', 'office')
-    #     self.dojo.add_person('pink', 'Fellow')
-    #     person = self.dojo.fellows[0]
-    #     room_name = person.office.name
-    #     self.assertEqual(room_name, 'pink')
+    def test_person_is_allocated_a_room(self):
+        self.dojo.create_room('yellow', 'office')
+        self.dojo.add_person('pink', 'Fellow')
+        person = self.dojo.fellows[0]
+        roomname = person.office.name
+        self.assertEqual(roomname, 'yellow')

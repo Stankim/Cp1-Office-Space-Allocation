@@ -11,6 +11,7 @@ class Room(object):
     '''
     def __init__(self, name):
         self.name = name
+        self.members = []
 
     def __repr__(self):
         return '<Room %s >' % self.name

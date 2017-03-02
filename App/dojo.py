@@ -104,12 +104,12 @@ class Dojo(object):
                     msg = 'You have successfully allocated %s' % name 
                     print (msg)
                     print "  "
-                self.all_rooms.append(person)
+                # self.all_rooms.append(person)
             else:
                 print (' No offices found')
                 return
 # adding person to all people list
-            self.all_people.append(person)
+            # self.all_people.append(person)
                     
 
 
