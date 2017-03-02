@@ -71,6 +71,7 @@ class Dojo(object):
     def add_person(self, person_name, category, wants_accomodation='N'):
         ''' Add new person and allocates a room by random'''
         name = person_name
+        # checks for accomodation 
         if wants_accomodation == 'N':
             if category == 'Staff':
                 person = Staff(name)
@@ -88,11 +89,13 @@ class Dojo(object):
                 if category == 'Staff':
                     office_select = random.choice(self.vacant_offices)
                     person = Staff(name)
+                    # add members to list
                     office_select.members.append(person)
                     self.all_rooms.append(person)
                     msg = 'You have successfully allocated %s' % name 
                     print (msg)
                     print "  "
+                    # adding a fellow to list
                 elif category == 'Fellow':
                     office_select = random.choice(self.vacant_offices)
                     person = Fellow(name)
@@ -105,7 +108,7 @@ class Dojo(object):
             else:
                 print (' No offices found')
                 return
-
+# adding person to all people list
         self.all_people.append(person)
                     
 
