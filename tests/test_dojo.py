@@ -6,7 +6,7 @@ class TestDojo(unittest.TestCase):
     Test Fixture: a piece of code that can construct and configure
     the system and the tasks getting ready to be tested and then cleans up
     '''
-    def setup(self):
+    def setUp(self):
         self.dojo = Dojo()
 
 
