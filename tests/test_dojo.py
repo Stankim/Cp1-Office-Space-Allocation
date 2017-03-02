@@ -66,10 +66,3 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(len(self.dojo.staff), 0)
         self.dojo.add_person('sonia', 'Staff', 'N')
         self.assertEqual(len(self.dojo.all_rooms), 1, 'staff sucessfully added')
-
-    def test_person_is_allocated_a_room(self):
-        self.dojo.create_room('yellow', 'office')
-        self.dojo.add_person('pink', 'Fellow')
-        person = self.dojo.fellows[0]
-        roomname = person.office.name
-        self.assertEqual(roomname, 'yellow')
