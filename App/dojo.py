@@ -73,10 +73,10 @@ class Dojo(object):
         name = person_name
         # checks for accomodation 
         if wants_accomodation == 'N':
-            if category == 'Staff':
+            if category == 'staff':
                 person = Staff(name)
                 self.staff.append(person)
-            elif category == 'Fellow':
+            elif category == 'fellow':
                 person = Fellow(name)
                 self.fellows.append(person)
         else:
@@ -86,7 +86,7 @@ class Dojo(object):
                     msg = 'There no vacant rooms '
                     print (msg)
                     return
-                if category == 'Staff':
+                if category == 'staff':
                     office_select = random.choice(self.vacant_offices)
                     person = Staff(name)
                     # add members to list
@@ -96,7 +96,7 @@ class Dojo(object):
                     print (msg)
                     print "  "
                     # adding a fellow to list
-                elif category == 'Fellow':
+                elif category == 'fellow':
                     office_select = random.choice(self.vacant_offices)
                     person = Fellow(name)
                     office_select.members.append(person)
@@ -109,7 +109,7 @@ class Dojo(object):
                 print (' No offices found')
                 return
 # adding person to all people list
-        self.all_people.append(person)
+            self.all_people.append(person)
                     
 
 
