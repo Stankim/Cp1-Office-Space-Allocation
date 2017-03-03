@@ -90,21 +90,21 @@ class Dojo(object):
                 else:
                     office_choice = random.choice(self.vacant_offices)
                     new_person = Fellow(name)
-                    office_choice.members.append(new_person)
-                if wants_accomodation == 'Y':
-                    if self.livingspace:
-                        self.check_vacant_rooms()
-                        if not self.vacant_livingspaces:
-                            print('There are no rooms available at the moment')
-                            return
-                        else:
-                            living_choice = random.choice(self.vacant_livingspaces)
-                            living_choice.members.append(new_person)
-                            msg = ('accomodation added')
+                #     office_choice.members.append(new_person)
+                # if wants_accomodation == 'Y':
+                #     if self.livingspace:
+                #         self.check_vacant_rooms()
+                #         if not self.vacant_livingspaces:
+                #             print('There are no rooms available at the moment')
+                #             return
+                #         else:
+                #             living_choice = random.choice(self.vacant_livingspaces)
+                #             living_choice.members.append(new_person)
+                #             msg = ('accomodation added')
                     self.fellows.append(new_person)
                     self.all_people.append(new_person)
                     self.allocated_fellows.append(new_person)
-                    msg = 'Fellow %s successfully added and assigned a room' % new_person.name
+                    msg = 'Fellow %s has been successfully added and assigned to room %s' % (new_person.name, office_choice.name)
                     print (msg)
                     return (msg)
             else:
@@ -123,36 +123,10 @@ class Dojo(object):
                     self.staff.append(new_person)
                     self.all_people.append(new_person)
                     self.allocated_staff.append(new_person)  
-                    msg = 'Staff %s successfully added and assigned a room' % new_person.name
+                    msg = 'Staff %s has been successfully added and assigned to room %s' % (new_person.name, office_choice.name)
                     print (msg)
             else:
                 print ('There no rooms, please add one by using the create room command')
-
-            
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     def print_room(self, room_name):
