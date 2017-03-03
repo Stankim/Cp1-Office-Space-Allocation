@@ -24,33 +24,46 @@ class Dojo(object):
         self.vacant_offices = []
         self.vacant_livingspaces = []
         self.allocated = []
+        self.allocated_people = []
+        self.unallocated_people = []
+        self.fellows = []
+        self.allocated_fellows = []
+        self.staff = []
+        self.allocated_staff = []
+        self.people = []
 
     
     def create_room(self, name, type_room):
         '''
         Create new rooms for person(s)
         '''
-        if type_room.lower() == 'livingspace':
-            new_room = Livingspace(name)
-            self.livingspace.append(new_room)
-            self.all_rooms.append(new_room)
-            msg = ' %s added successfully' % new_room
-            print (msg)
+        if type_room.lower() in [type_room for room in self.all_rooms]:
+            print("Sorry, Room already exists!!!")
+            return " "
+        else:        
+            if type_room.lower() == 'livingspace':
+                new_room = Livingspace(name)
+                self.livingspace.append(new_room)
+                self.all_rooms.append(new_room)
+                msg = ' A Livingspace called %s has been successfully created!' % new_room.name
+                print (msg)
+            
+            elif type_room.lower() == 'office':
+                new_room = Office(name)
+                self.office.append(new_room)
+                self.all_rooms.append(new_room)
+                msg = ' An office called %s has been successfully created!' % new_room.name
+                print (msg)            
+            else:
+                print ('invalid')
         
-        elif type_room.lower() == 'office':
-            new_room = Office(name)
-            self.office.append(new_room)
-            self.all_rooms.append(new_room)
-            msg = ' %s added successfully' % new_room
-            print (msg)            
-        else:
-            return 'Invalid'
 
-    def check_vacant_room(self):
+    def check_vacant_rooms(self):
         ''' checks for vacant rooms and adds to list'''
         for office in self.office:
             if len(office.members) < office.capacity:
                 if office not in self.vacant_offices:
+                    
                     self.vacant_offices.append(office)
                     self.vacant_rooms.append(office)
             # removes full rooms from list
@@ -67,50 +80,61 @@ class Dojo(object):
                 elif len(livingspace.members) >= livingspace.capacity:
                     self.vacant_livingspaces.append(livingspace)
                     self.vacant_rooms.append(livingspace)
-        
-    def add_person(self, person_name, category, wants_accomodation='N'):
-        ''' Add new person and allocates a room by random'''
-        name = person_name
-        # checks for accomodation 
-        if wants_accomodation == 'N':
-            if category == 'staff':
-                person = Staff(name)
-                self.staff.append(person)
-            elif category == 'fellow':
-                person = Fellow(name)
-                self.fellows.append(person)
-        else:
-            if self.office:
-                self.check_vacant_room()
+    
+
+    def add_person(self, name, category, wants_accomodation= 'N'):
+        """Add new person"""
+        if category == 'fellow':
+            person = Fellow(name)
+
+            try:
+                office_choice = random.choice(self.vacant_offices)
+                self.check_vacant_rooms()
                 if not self.vacant_offices:
-                    msg = 'There no vacant rooms '
-                    print (msg)
+                    print (' roo is not available')
                     return
-                if category == 'staff':
-                    office_select = random.choice(self.vacant_offices)
-                    person = Staff(name)
-                    # add members to list
-                    office_select.members.append(person)
-                    self.all_rooms.append(person)
-                    msg = 'You have successfully allocated %s' % name 
-                    print (msg)
-                    print "  "
-                    # adding a fellow to list
-                elif category == 'fellow':
-                    office_select = random.choice(self.vacant_offices)
-                    person = Fellow(name)
-                    office_select.members.append(person)
-                    self.all_rooms.append(person)
-                    msg = 'You have successfully allocated %s' % name 
-                    print (msg)
-                    print "  "
-                # self.all_rooms.append(person)
-            else:
-                print (' No offices found')
+            except IndexError:
+                print ('nno rooms avail')
                 return
-# adding person to all people list
-            # self.all_people.append(person)
-                    
+            office_choice.members.append(person)
+            # print('sucess')
+            if wants_accomodation == 'Y':
+                
+                try:
+                    livingspace_choice = random.choice(self.vacant_livingspaces)
+                    if not self.vacant_livingspaces:
+                        print ('room is not avail')
+                        return
+                except IndexError:
+                    return  ('lspace not avail')
+            self.fellows.append(person)
+            self.all_people.append(person)
+            print('success')
+        elif category == 'staff':
+            person = Staff(name)
+
+            try:
+                office_choice = random.choice(self.vacant_offices)
+                self.check_vacant_rooms()
+                if not self.vacant_offices:
+                    print (' roo is not available')
+                    return
+            except IndexError:
+                print ('nno rooms avail')
+                return
+            office_choice.members.append(person)
+            self.staff.append(person)
+            self.all_people.append(person)
+        else:
+            return ('inavalid')
+            
+
+
+            
+
+
+
+
 
 
 

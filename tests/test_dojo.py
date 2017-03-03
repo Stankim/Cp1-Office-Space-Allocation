@@ -21,7 +21,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('Blue', 'office')
         self.dojo.create_room('Black', 'office')
         self.dojo.create_room('Brown', 'office')
-        self.assertEqual(len(self.dojo.all_rooms), 3, 'rooms added successfully')
+        self.assertEqual(len(self.dojo.all_rooms), 3,)
 
     def test_office_is_created(self):
         '''test to confirm an office is created'''
@@ -64,5 +64,33 @@ class TestDojo(unittest.TestCase):
         '''
         self.dojo.create_room('blue', 'office')
         self.assertEqual(len(self.dojo.staff), 0)
-        self.dojo.add_person('sonia', 'Staff', 'N')
+        self.dojo.add_person('kobby', 'Staff', 'N')
         self.assertEqual(len(self.dojo.all_rooms), 1, 'staff sucessfully added')
+
+    def test_print_room(self):
+        '''test that members of a room are printed'''
+        self.dojo.create_room('blue', 'office')
+        self.dojo.create_room('brown', 'livingspace')
+        self.dojo.add_person('sonia', 'fellow')
+        self.dojo.add_person('kobby', 'staff')
+        self.dojo.add_person('bett', 'fellow')
+        self.dojo.print_room('blue')
+
+    def test_print_allocations_filename(self):
+        '''test that allocated people are printed to a file'''
+        self.dojo.create_room('blue', 'office')
+        self.dojo.create_room('brown', 'livingspace')
+        self.dojo.add_person('kobby', 'staff')
+        self.dojo.add_person('bett', 'fellow')
+        self.dojo.add_person('khalid', 'fellow', 'Y')
+        self.dojo.print_allocations('allocations.txt')
+
+
+    def test_print_unallocated_filename(self):
+        '''test that unallocated people are printed to a file'''
+        self.dojo.create_room('blue', 'office')
+        self.dojo.create_room('brown', 'livingspace')
+        self.dojo.add_person('kobby', 'staff')
+        self.dojo.add_person('bett', 'fellow')
+        self.dojo.add_person('khalid', 'fellow', 'Y')
+        self.dojo.print_un_allocated('unallocated.txt')                

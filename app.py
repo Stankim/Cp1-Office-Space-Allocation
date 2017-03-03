@@ -4,15 +4,15 @@ This example uses docopt with the built in cmd module to demonstrate an
 interactive command application.
 
 Usage:
-    dojo create_room <room_name> <room_type>
-    dojo add_person <first_name> <last_name> <category> [<accomodation>]<seconds>]
-    my_program (-i | --interactive)
-    my_program (-h | --help | --version)
+    dojo (-i | --interactive)
+    dojo (-h | --help | --version)
+    dojo create_room <room_name> (livingspace|Office)...
+    dojo add_person <fname> <lname> (fellow|staff) [<accommodation>]
 
 Options:
     -i, --interactive  Interactive Mode
     -h, --help  Show this screen and exit.
-    --accommodation   If person needs accommodation [default='no']
+    --baud=<n>  Baudrate [default: 9600]
 """
 
 import sys
@@ -20,7 +20,7 @@ import cmd
 from docopt import docopt, DocoptExit
 from App.dojo import Dojo
 from App.person import Fellow, Staff
-
+dojo = Dojo()
 
 def docopt_cmd(func):
     """
@@ -53,27 +53,39 @@ def docopt_cmd(func):
     return fn
 
 
-class MyInteractive (cmd.Cmd):
-    intro = 'Welcome to my interactive program!' \
+class Interactive (cmd.Cmd):
+    intro = 'Welcome to Dojo office allocation!' \
         + ' (type help for a list of commands.)'
-    prompt = '(my_program) '
+    prompt = '(dojo) '
     file = None
+    
 
     @docopt_cmd
-    def do_tcp(self, arg):
-        """Usage: tcp <host> <port> [--timeout=<seconds>]"""
+    def do_create_room(self, arg):
+        """Usage: create_room <room_name> <room_type>"""
+        name = arg['<room_name>']
+        type_room  = arg['<room_type>']
 
-        print(arg)
+        create_room_status = dojo.create_room(name, type_room)
+        if create_room_status == 'Invalid Room Type':
+            print(create_room_status)
+            return
+        # print (dojo.all_rooms)
 
+        
     @docopt_cmd
-    def do_serial(self, arg):
-        """Usage: serial <port> [--baud=<n>] [--timeout=<seconds>]
-
-Options:
-    --baud=<n>  Baudrate [default: 9600]
+    def do_add_person(self, arg):
         """
+        Creates a person and assign them to a room in Amity.
+        Usage:
+            add_person <first_name> <last_name> <role> [<accomodation>]
+        """
+        name = arg['<first_name>'] + " " + arg["<last_name>"]
+        role = arg['<role>']
+        wants_accomodation = arg['<accomodation>']
 
-        print(arg)
+        dojo.add_person(name, role, wants_accomodation)
+
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
@@ -84,6 +96,6 @@ Options:
 opt = docopt(__doc__, sys.argv[1:])
 
 if opt['--interactive']:
-    MyInteractive().cmdloop()
+    Interactive().cmdloop()
 
 print(opt)

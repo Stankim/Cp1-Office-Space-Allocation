@@ -11,9 +11,10 @@ class Person(object):
     and Livingspace inherit from
     '''    
     
-    def __init__(self, person_name, category):
-        self.name = person_name
-        self.category = category
+    def __init__(self, name):
+        self.name = name
+        self.office = None
+        # self.category = category
 
     def __repr__(self):
         return '<Person %s>' % self.name
@@ -22,12 +23,11 @@ class Fellow(Person):
     
     def __init__(self, name, wants_accomodation='N'):
         super(Fellow, self).__init__(name)
-        self.wants_accomodation= wants_accomodation
+        self.wants_accomodation = wants_accomodation
+        # self.hostel = None
 
     def __repr__(self):
         return '<Fellow %s>' % self.name
-    
-
 
 class Staff(Person):
     
