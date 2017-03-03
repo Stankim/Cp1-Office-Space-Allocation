@@ -6,7 +6,7 @@ class TestDojo(unittest.TestCase):
     Test Fixture: a piece of code that can construct and configure
     the system and the tasks getting ready to be tested and then cleans up
     '''
-    def setup(self):
+    def setUp(self):
         self.dojo = Dojo()
 
 
@@ -21,18 +21,32 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('Blue', 'office')
         self.dojo.create_room('Black', 'office')
         self.dojo.create_room('Brown', 'office')
-        self.assertEqual(len(self.dojo.all_rooms), 3, 'rooms added successfully')
+        self.assertEqual(len(self.dojo.all_rooms), 1)
+
+    def test_office_is_created(self):
+        '''test to confirm an office is created'''
+        office = self.dojo.office
+        self.assertEqual(len(office), 0)
+        self.dojo.create_room('green', 'office')
+        self.assertEqual(len(office), 1)
+        
+    def test_living_space_is_created(self):
+        '''test to confirm that living space is created'''
+        livingspace = self.dojo.livingspace
+        self.assertEqual(len(livingspace), 0)
+        self.dojo.create_room('crypton', 'livingspace')
+        self.assertEqual(len(livingspace), 1)
         
     
     def test_add_person_added_successfully(self):
         '''
         tests that all person(s) are added
         '''
-        self.assertEqual(len(self.dojo.all_people), 0)
+        self.assertEqual(len(self.dojo.all_rooms), 0)
         self.dojo.create_room('brown', 'office')
         self.dojo.create_room('red', 'livingspace')
-        self.dojo.add_person('kobby','fellow', 'y')
-        self.dojo.add_person('bett', 'staff')
+        self.dojo.add_person('kobby','Staff')
+        self.dojo.add_person('bett', 'Fellow')
         self.assertEqual(len(self.dojo.all_people), 2)
 
     def test_fellow_is_added_successfully(self):
@@ -41,8 +55,8 @@ class TestDojo(unittest.TestCase):
         '''
         self.dojo.create_room('brown', 'office')
         self.assertEqual(len(self.dojo.fellows), 0)
-        self.dojo.add_person('khalid', 'fellow', 'y')
-        self.assertEqual(len(self.dojo.all_people), 1 , 'fellow successfully added')
+        self.dojo.add_person('khalid', 'Fellow', 'Y')
+        self.assertEqual(len(self.dojo.all_rooms), 1 , 'fellow successfully added')
 
     def test_staff_is_added_sucessfully(self):
         '''
@@ -50,6 +64,33 @@ class TestDojo(unittest.TestCase):
         '''
         self.dojo.create_room('blue', 'office')
         self.assertEqual(len(self.dojo.staff), 0)
-        self.dojo.add_person('sonia', 'staff')
-        self.assertEqual(len(self.dojo.all_people), 1, 'staff sucessfully added')
+        self.dojo.add_person('kobby', 'Staff', 'N')
+        self.assertEqual(len(self.dojo.all_rooms), 1, 'staff sucessfully added')
 
+    def test_print_room(self):
+        '''test that members of a room are printed'''
+        self.dojo.create_room('blue', 'office')
+        self.dojo.create_room('brown', 'livingspace')
+        self.dojo.add_person('sonia', 'fellow')
+        self.dojo.add_person('kobby', 'staff')
+        self.dojo.add_person('bett', 'fellow')
+        self.dojo.print_room('blue')
+
+    def test_print_allocations_filename(self):
+        '''test that allocated people are printed to a file'''
+        self.dojo.create_room('blue', 'office')
+        self.dojo.create_room('brown', 'livingspace')
+        self.dojo.add_person('kobby', 'staff')
+        self.dojo.add_person('bett', 'fellow')
+        self.dojo.add_person('khalid', 'fellow', 'Y')
+        self.dojo.print_allocations('allocations.txt')
+
+
+    def test_print_unallocated_filename(self):
+        '''test that unallocated people are printed to a file'''
+        self.dojo.create_room('blue', 'office')
+        self.dojo.create_room('brown', 'livingspace')
+        self.dojo.add_person('kobby', 'staff')
+        self.dojo.add_person('bett', 'fellow')
+        self.dojo.add_person('khalid', 'fellow', 'Y')
+        self.dojo.print_unallocated('unallocated.txt')                
