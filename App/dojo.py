@@ -63,7 +63,6 @@ class Dojo(object):
         for office in self.office:
             if len(office.members) < office.capacity:
                 if office not in self.vacant_offices:
-                    
                     self.vacant_offices.append(office)
                     self.vacant_rooms.append(office)
             # removes full rooms from list
@@ -85,48 +84,66 @@ class Dojo(object):
     def add_person(self, name, category, wants_accomodation= 'N'):
         """Add new person"""
         if category == 'fellow':
-            person = Fellow(name)
-
-            try:
-                office_choice = random.choice(self.vacant_offices)
+            new_person = Fellow(name)
+            if self.office:
                 self.check_vacant_rooms()
                 if not self.vacant_offices:
-                    print (' roo is not available')
+                    print ( 'no offices')
                     return
-            except IndexError:
-                print ('nno rooms avail')
-                return
-            office_choice.members.append(person)
-            # print('sucess')
-            if wants_accomodation == 'Y':
-                
-                try:
-                    livingspace_choice = random.choice(self.vacant_livingspaces)
-                    if not self.vacant_livingspaces:
-                        print ('room is not avail')
-                        return
-                except IndexError:
-                    return  ('lspace not avail')
-            self.fellows.append(person)
-            self.all_people.append(person)
-            print('success')
+                else:
+                    office_choice = random.choice(self.vacant_offices)
+                    new_person = Fellow(name)
+                    office_choice.members.append(new_person)
+                    self.fellows.append(new_person)
+                    self.all_people.append(new_person)
+                    self.allocated_fellows.append(new_person)
+                    msg = 'Fellow %s successfully added and assigned a room' % new_person.name
+                    print (msg)
+            else:
+                print ('please add a room')
         elif category == 'staff':
-            person = Staff(name)
-
-            try:
-                office_choice = random.choice(self.vacant_offices)
+            new_person = Staff(name)
+            if self.office:
                 self.check_vacant_rooms()
                 if not self.vacant_offices:
-                    print (' roo is not available')
+                    print ('no offices')
                     return
-            except IndexError:
-                print ('nno rooms avail')
-                return
-            office_choice.members.append(person)
-            self.staff.append(person)
-            self.all_people.append(person)
-        else:
-            return ('inavalid')
+                else:
+                    office_choice = random.choice(self.vacant_offices)
+                    new_person = Staff(name)
+                    office_choice.members.append(new_person)
+                    self.staff.append(new_person)
+                    self.all_people.append(new_person)
+                    self.allocated_staff.append(new_person)  
+                    msg = 'Staff %s successfully added and assigned a room' % new_person.name
+                    print (msg)
+            else:
+                print ('please add a room')
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def print_room(self, room_name):
         pass
