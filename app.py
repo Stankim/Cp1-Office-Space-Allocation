@@ -20,6 +20,8 @@ import cmd
 from docopt import docopt, DocoptExit
 from App.dojo import Dojo
 from App.person import Fellow, Staff
+from pyfiglet import figlet_format
+from termcolor import cprint
 dojo = Dojo()
 
 def docopt_cmd(func):
@@ -54,6 +56,7 @@ def docopt_cmd(func):
 
 
 class Interactive (cmd.Cmd):
+    cprint(figlet_format(' THE DOJO', font='univers'), 'yellow', attrs=['bold'])
     intro = 'Welcome to Dojo office allocation!' \
         + ' (type help for a list of commands.)'
     prompt = '(dojo) '
