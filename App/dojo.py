@@ -88,7 +88,7 @@ class Dojo(object):
             if self.office:
                 self.check_vacant_rooms()
                 if not self.vacant_offices:
-                    print ( 'no offices')
+                    print ( 'There are no rooms available at the moment')
                     return
                 else:
                     office_choice = random.choice(self.vacant_offices)
@@ -100,7 +100,7 @@ class Dojo(object):
                     msg = 'Fellow %s successfully added and assigned a room' % new_person.name
                     print (msg)
             else:
-                print ('please add a room')
+                print ('There no rooms, please add one by using the create room command')
         elif category == 'staff':
             new_person = Staff(name)
             if self.office:
@@ -118,7 +118,7 @@ class Dojo(object):
                     msg = 'Staff %s successfully added and assigned a room' % new_person.name
                     print (msg)
             else:
-                print ('please add a room')
+                print ('There no rooms, please add one by using the create room command')
 
         
 
