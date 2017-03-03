@@ -96,8 +96,8 @@ class TestDojo(unittest.TestCase):
         self.dojo.print_unallocated('unallocated.txt')
 
     def test_room_with_same_name_not_created(self):
-        self.dojo.create_room("purple", "office")
+        self.dojo.create_room("blue", "office")
         r_names = [r.name for r in self.dojo.all_rooms]
-        self.assertIn("purple", r_names)
-        msg = self.dojo.create_room("purple", "office")
+        self.assertIn("blue", r_names)
+        msg = self.dojo.create_room("blue", "office")
         self.assertEqual(msg, "sorry, one or more room name's already exists!please choose another name")                        
