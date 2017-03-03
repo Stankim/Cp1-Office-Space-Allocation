@@ -30,29 +30,36 @@ class Dojo(object):
         self.allocated_fellows = []
         self.staff = []
         self.allocated_staff = []
-        self.people = []
 
     
     def create_room(self, name, type_room):
         '''
         Create new rooms for person(s)
         '''       
-        if type_room.lower() == 'livingspace':
-            new_room = Livingspace(name)
-            self.livingspace.append(new_room)
-            self.all_rooms.append(new_room)
-            msg = ' A Livingspace called %s has been successfully created!' % new_room.name
-            print (msg)
-        
-        elif type_room.lower() == 'office':
-            new_room = Office(name)
-            self.office.append(new_room)
-            self.all_rooms.append(new_room)
-            msg = ' An office called %s has been successfully created!' % new_room.name
-            print (msg)            
+        room_names = [room.name for room in self.all_rooms]
+        msg = ''
+        if name in room_names:
+            msg = "sorry, one or more room name's already exists!please choose another name"
+            print(msg)
+            return msg
         else:
-            print ('invalid')
         
+            if type_room.lower() == 'livingspace':
+                new_room = Livingspace(name)
+                self.livingspace.append(new_room)
+                self.all_rooms.append(new_room)
+                msg = ' A Livingspace called %s has been successfully created!' % new_room.name
+                print (msg)
+            
+            elif type_room.lower() == 'office':
+                new_room = Office(name)
+                self.office.append(new_room)
+                self.all_rooms.append(new_room)
+                msg = ' An office called %s has been successfully created!' % new_room.name
+                print (msg)            
+            else:
+                print ('invalid')
+            
 
     def check_vacant_rooms(self):
         ''' checks for vacant rooms and adds to list'''
@@ -90,6 +97,7 @@ class Dojo(object):
                 else:
                     office_choice = random.choice(self.vacant_offices)
                     new_person = Fellow(name)
+                    # work in progress
                 #     office_choice.members.append(new_person)
                 # if wants_accomodation == 'Y':
                 #     if self.livingspace:
