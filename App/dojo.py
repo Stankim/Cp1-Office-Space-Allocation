@@ -127,7 +127,15 @@ class Dojo(object):
             self.all_people.append(person)
         else:
             return ('inavalid')
-            
+
+    def print_room(self, room_name):
+        pass
+
+    def print_allocations(self, filename):
+        pass
+
+    def print_unallocated(self, filename):
+        pass
 
 
             
