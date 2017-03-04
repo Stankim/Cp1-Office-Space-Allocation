@@ -9,9 +9,8 @@ Desc      : Office Allocator model module
 # ============================================================================
 import random
 
-from App.person import Fellow, Staff
-
-from App.rooms import Livingspace, Office
+from  App.person import Fellow, Staff
+from  App.rooms import Livingspace, Office
 
 class Dojo(object):
 

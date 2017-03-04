@@ -1,4 +1,5 @@
 import unittest
+import os
 from App.dojo import Dojo
 
 class TestDojo(unittest.TestCase):
