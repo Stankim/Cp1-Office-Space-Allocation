@@ -97,26 +97,30 @@ class Dojo(object):
                 else:
                     office_choice = random.choice(self.vacant_offices)
                     new_person = Fellow(name)
-                    # work in progress
-                #     office_choice.members.append(new_person)
-                # if wants_accomodation == 'Y':
-                #     if self.livingspace:
-                #         self.check_vacant_rooms()
-                #         if not self.vacant_livingspaces:
-                #             print('There are no rooms available at the moment')
-                #             return
-                #         else:
-                #             living_choice = random.choice(self.vacant_livingspaces)
-                #             living_choice.members.append(new_person)
-                #             msg = ('accomodation added')
+                    office_choice.members.append(new_person)
                     self.fellows.append(new_person)
                     self.all_people.append(new_person)
                     self.allocated_fellows.append(new_person)
-                    msg = 'Fellow %s has been successfully added and assigned to room %s' % (new_person.name, office_choice.name)
+                    msg = 'Fellow %s has been successfully added and assigned to office %s' % (new_person.name, office_choice.name)
                     print (msg)
                     return (msg)
-            else:
                 print ('There no rooms, please add one by using the create room command')
+            if wants_accomodation == 'Y':
+                if self.livingspace:
+                    self.check_vacant_rooms()
+                    if not self.vacant_livingspaces:
+                        print('there no rooms at the moment')
+                        return
+                    else:
+                        lspace_choice = random.choice(self.vacant_livingspaces)
+                        new_person = Fellow(name)
+                        lspace_choice.members.append(new_person)
+                        self.fellows.append(new_person)
+                        self.all_people.append(new_person)
+                        msg = 'Fellow %s has been successfully added and assigned to Livingspace %s' % (new_person.name, lspace_choice.name)
+                        print (msg)
+                        return (msg)
+                    print ('There no rooms, please add one by using the create room command')
         elif category == 'staff':
             new_person = Staff(name)
             if self.office:
@@ -131,7 +135,7 @@ class Dojo(object):
                     self.staff.append(new_person)
                     self.all_people.append(new_person)
                     self.allocated_staff.append(new_person)  
-                    msg = 'Staff %s has been successfully added and assigned to room %s' % (new_person.name, office_choice.name)
+                    msg = 'Staff %s has been successfully added and assigned to office %s' % (new_person.name, office_choice.name)
                     print (msg)
             else:
                 print ('There no rooms, please add one by using the create room command')

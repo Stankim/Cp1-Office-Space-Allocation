@@ -58,6 +58,15 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('khalid', 'Fellow', 'Y')
         self.assertEqual(len(self.dojo.all_rooms), 1 , 'fellow successfully added')
 
+    def test_fellow_accomodation_is_added_successfully(self):
+        '''
+        test to confirm a fellow is added
+        '''
+        self.dojo.create_room('brown', 'livingspace')
+        self.assertEqual(len(self.dojo.fellows), 0)
+        self.dojo.add_person('khalid', 'Fellow', 'Y')
+        self.assertEqual(len(self.dojo.all_rooms), 1 , 'fellow successfully added')        
+
     def test_staff_is_added_sucessfully(self):
         '''
         tests to confirm staff is added
