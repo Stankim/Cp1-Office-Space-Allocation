@@ -9,9 +9,9 @@ Desc      : Office Allocator model module
 # ============================================================================
 import random
 
-from person import Fellow, Staff
+from App.person import Fellow, Staff
 
-from rooms import Livingspace, Office
+from App.rooms import Livingspace, Office
 
 class Dojo(object):
 
@@ -106,7 +106,6 @@ class Dojo(object):
                         msg = 'Fellow %s has been successfully added and assigned to Livingspace %s !' % (new_person.name, lspace_choice.name)
                         print (msg)
                         return (msg)
-                        print ('  ')
                     print ('There no rooms, please add one by using the create room command')
             else:
                 if self.office:
@@ -143,7 +142,6 @@ class Dojo(object):
                     print (msg)
             else:
                 print ('There no rooms, please add one by using the create room command')
-
 
     def print_room(self, room_name):
         pass

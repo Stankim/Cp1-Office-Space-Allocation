@@ -45,7 +45,7 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(len(self.dojo.all_rooms), 0)
         self.dojo.create_room('brown', 'office')
         self.dojo.create_room('red', 'livingspace')
-        self.dojo.add_person('kobby','Staff')
+        self.dojo.add_person('kobby', 'Staff')
         self.dojo.add_person('bett', 'Fellow')
         self.assertEqual(len(self.dojo.all_rooms), 2)
 
@@ -56,7 +56,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('brown', 'office')
         self.assertEqual(len(self.dojo.fellows), 0)
         self.dojo.add_person('khalid', 'Fellow', 'Y')
-        self.assertEqual(len(self.dojo.all_rooms), 1 , 'fellow successfully added')
+        self.assertEqual(len(self.dojo.all_rooms), 1, 'fellow successfully added')
 
     def test_fellow_accomodation_is_added_successfully(self):
         '''
@@ -65,7 +65,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('brown', 'livingspace')
         self.assertEqual(len(self.dojo.fellows), 0)
         self.dojo.add_person('khalid', 'Fellow', 'Y')
-        self.assertEqual(len(self.dojo.all_rooms), 1 , 'fellow successfully added')        
+        self.assertEqual(len(self.dojo.all_rooms), 1, 'fellow successfully added')        
 
     def test_staff_is_added_sucessfully(self):
         '''
