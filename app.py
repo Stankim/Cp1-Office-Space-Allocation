@@ -8,6 +8,7 @@ Usage:
     dojo (-h | --help | --version)
     dojo create_room <room_name> (livingspace|Office)...
     dojo add_person <fname> <lname> (fellow|staff) [<accommodation>]
+    dojo print_room <room_name>
 
 Options:
     -i, --interactive  Interactive Mode
@@ -79,7 +80,7 @@ class Interactive (cmd.Cmd):
     @docopt_cmd
     def do_add_person(self, arg):
         """
-        Creates a person and assign them to a room in Amity.
+        Creates a person and assign them to a room in Dojo.
         Usage:
             add_person <first_name> <last_name> <role> [<accomodation>]
         """
@@ -88,6 +89,17 @@ class Interactive (cmd.Cmd):
         wants_accomodation = arg['<accomodation>']
 
         dojo.add_person(name, role, wants_accomodation)
+
+    @docopt_cmd
+    def do_print_room(self, arg):
+        """
+        This function prints the members of a given room
+        Usage:
+            print_room [<room_name>]
+        """
+        room_name = arg['<room_name>']
+
+        dojo.print_room(room_name)        
 
 
     def do_quit(self, arg):

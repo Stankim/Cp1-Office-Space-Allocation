@@ -85,7 +85,6 @@ class Dojo(object):
                         self.vacant_livingspaces.append(livingspace)
                         self.vacant_rooms.append(livingspace)
 
-
     def add_person(self, name, category, wants_accomodation= 'N'):
         """Add new person"""
         if category == 'fellow':
@@ -143,10 +142,9 @@ class Dojo(object):
                 print ('There no rooms, please add one by using the create room command')
 
     def print_room(self, room_name):
-        pass
-
-    def print_allocations(self, filename):
-        pass
-
-    def print_unallocated(self, filename):
-        pass
+        rooms = self.all_rooms
+        print( room_name + '\n'  + '=' *30)
+        for room in rooms:
+            if room_name == room_name:
+                for member in room.members:
+                    print (member.name)
