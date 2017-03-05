@@ -93,7 +93,7 @@ class Dojo(object):
                 if self.livingspace:
                     self.check_vacant_rooms()
                     if not self.vacant_livingspaces:
-                        print('there no rooms at the moment')
+                        print('There are no rooms available at the moment')
                         return
                     else:
                         ''' chooses a random room to a user'''
@@ -128,7 +128,7 @@ class Dojo(object):
             if self.office:
                 self.check_vacant_rooms()
                 if not self.vacant_offices:
-                    print ('no offices')
+                    print ('There are no rooms available at the moment')
                     return
                 else:
                     office_choice = random.choice(self.vacant_offices)
@@ -144,20 +144,21 @@ class Dojo(object):
 
     def print_room(self, room_name):
         rooms = self.all_rooms
-        table_headers = ['room','member']
+        p = self.all_people
+        table_headers = ['room','member','category']
         ''' empty table list for name'''
         table = []
         for room in rooms:
-            if room_name == room_name:
+            if room_name == room.name:
                 for member in room.members:
-                    #  Adds item to empty list
-                    table.append([room_name, member.name])
-                    print (Fore.YELLOW + tabulate(table, table_headers, tablefmt="grid"))
-            else:
-                return (' add name')
+                    for category in p:
+                        #  Adds item to empty list
+                        table.append([room_name, member.name,category])
+                        print (Fore.YELLOW + tabulate(table, table_headers, tablefmt="grid"))
+                    else:
+                     return (' add name')
         else:
-            print ('no room found! please add one by using the create_room command')
-                
+             print 'add'           
                     # print (member.name)
         
     def print_unallocated(self, filename):

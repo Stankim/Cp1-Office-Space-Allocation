@@ -37,8 +37,7 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(len(livingspace), 0)
         self.dojo.create_room('crypton', 'livingspace')
         self.assertEqual(len(livingspace), 1)
-        
-    
+
     def test_add_person_added_successfully(self):
         '''
         tests that all person(s) are added succesfully 
@@ -80,13 +79,29 @@ class TestDojo(unittest.TestCase):
 
     def test_staff_is_added_sucessfully(self):
         '''
-        tests to confirm staff is added
+        test to confirm staff is added
         '''
         self.dojo.create_room('blue', 'office')
         self.assertEqual(len(self.dojo.staff), 0)
         self.dojo.add_person('kobby', 'Staff', 'N')
         self.assertEqual(len(self.dojo.all_rooms), 1, 'staff sucessfully added')
 
+    def test_room_with_same_name_not_created(self):
+        self.dojo.create_room("blue", "office")
+        r_names = [r.name for r in self.dojo.all_rooms]
+        self.assertIn("blue", r_names)
+        msg = self.dojo.create_room("blue", "office")
+        self.assertEqual(msg, "sorry, one or more room name's already exists!please choose another name") 
+
+    def test_vacant_rooms_added_successfully(self):
+        self.assertEqual(len(self.dojo.all_rooms), 0)      
+        self.dojo.create_room('blue', 'livingspace')
+        self.dojo.create_room('red', 'office')
+        self.dojo.add_person('kobby', 'staff')
+        self.dojo.add_person('bett', 'fellow')        
+        self.assertEqual(len(self.dojo.vacant_livingspaces), 1)
+        self.assertEqual(len(self.dojo.vacant_offices), 1) 
+        
     def test_print_room(self):
         '''test that members of a room are printed'''
         self.dojo.create_room('blue', 'office')
@@ -97,7 +112,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.print_room('blue')
 
     def test_print_room_not_added(self):
-        '''test that members of a room are printed'''
+        '''test that members of a room are created'''
         self.dojo.create_room('', 'office')
         self.dojo.create_room('', 'livingspace')
         self.dojo.add_person('sonia', 'fellow')
@@ -106,7 +121,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.print_room('blue')
 
     def test_invalid_print_room(self):
-        '''test that members of a room are printed'''
+        '''test invalid room '''
         self.dojo.create_room('blue', 'office')
         self.dojo.create_room('brown', 'livingspace')
         self.dojo.add_person('sonia', 'fellow' 'Y')
@@ -123,7 +138,6 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('khalid', 'fellow', 'Y')
         self.dojo.print_allocations('allocations.txt')
 
-
     def test_print_unallocated_filename(self):
         '''test that unallocated people are printed to a file'''
         self.dojo.create_room('blue', 'office')
@@ -131,11 +145,4 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')
         self.dojo.add_person('khalid', 'fellow', 'Y')
-        self.dojo.print_unallocated('unallocated.txt')
-
-    def test_room_with_same_name_not_created(self):
-        self.dojo.create_room("blue", "office")
-        r_names = [r.name for r in self.dojo.all_rooms]
-        self.assertIn("blue", r_names)
-        msg = self.dojo.create_room("blue", "office")
-        self.assertEqual(msg, "sorry, one or more room name's already exists!please choose another name")                        
+        self.dojo.print_unallocated('unallocated.txt')                           
