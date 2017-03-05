@@ -158,7 +158,7 @@ class Dojo(object):
                     else:
                      return (' add name')
         else:
-             print 'add'           
+             print ('add')           
                     # print (member.name)
         
     def print_unallocated(self, filename):
