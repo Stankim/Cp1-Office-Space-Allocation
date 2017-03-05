@@ -154,9 +154,9 @@ class Dojo(object):
                     table.append([room_name, member.name])
                     print (Fore.YELLOW + tabulate(table, table_headers, tablefmt="grid"))
             else:
-                return ' add name'
+                return (' add name')
         else:
-            print 'no room found! please add one by using the create_room command'
+            print ('no room found! please add one by using the create_room command')
                 
                     # print (member.name)
         
