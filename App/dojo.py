@@ -11,6 +11,8 @@ import random
 
 from  App.person import Fellow, Staff
 from  App.rooms import Livingspace, Office
+from tabulate import tabulate
+from colorama import Fore, Back, Style
 
 class Dojo(object):
 
@@ -34,9 +36,7 @@ class Dojo(object):
 
 
     def create_room(self, name, type_room):
-        '''
-        Create new rooms for person(s)
-        '''
+        ''' checks for duplicate room names'''
         room_names = [room.name for room in self.all_rooms]
         msg = ''
         if name in room_names:
@@ -44,7 +44,7 @@ class Dojo(object):
             print(msg)
             return msg
         else:
-
+            '''Create new Livingspace for person(s)'''
             if type_room.lower() == 'livingspace':
                 new_room = Livingspace(name)
                 self.livingspace.append(new_room)
@@ -63,18 +63,17 @@ class Dojo(object):
 
 
     def check_vacant_rooms(self):
-        ''' checks for vacant rooms and adds to list'''
+        ''' checks for vacant rooms'''
         for office in self.office:
             if len(office.members) < office.capacity:
                 if office not in self.vacant_offices:
                     self.vacant_offices.append(office)
                     self.vacant_rooms.append(office)
-            # removes full rooms from list
             elif len(office.members) >= office.capacity:
                 if office in self.vacant_offices:
                     self.vacant_offices.remove(office)
                     self.vacant_rooms.remove(office)
-            #  checks for vacant rooms in livingspace
+                    ''' checks vacant rooms and add to a list'''
         for livingspace in self.livingspace:
             if len(livingspace.members) < livingspace.capacity:
                 if livingspace not in self.vacant_livingspaces:
@@ -90,20 +89,22 @@ class Dojo(object):
         if category == 'fellow':
             new_person = Fellow(name)
             if wants_accomodation == 'Y':
+                ''' checks for vacant room'''
                 if self.livingspace:
                     self.check_vacant_rooms()
                     if not self.vacant_livingspaces:
                         print('there no rooms at the moment')
                         return
                     else:
+                        ''' chooses a random room to a user'''
                         lspace_choice = random.choice(self.vacant_livingspaces)
-                        # new_person = Fellow(name)
                         lspace_choice.members.append(new_person)
                         self.fellows.append(new_person)
                         self.all_people.append(new_person)
                         msg = 'Fellow %s has been successfully added and assigned to Livingspace %s !' % (new_person.name, lspace_choice.name)
                         print (msg)
                         return (msg)
+                        ''' Error message if room is not created'''
                     print ('There no rooms, please add one by using the create room command')
             else:
                 if self.office:
@@ -113,7 +114,7 @@ class Dojo(object):
                         return
                     else:
                         office_choice = random.choice(self.vacant_offices)
-                        # new_person = Fellow(name)
+                        ''' Adds user to room mebers list'''
                         office_choice.members.append(new_person)
                         self.fellows.append(new_person)
                         self.all_people.append(new_person)
@@ -143,8 +144,24 @@ class Dojo(object):
 
     def print_room(self, room_name):
         rooms = self.all_rooms
-        print( room_name + '\n'  + '=' *30)
+        table_headers = ['room','member']
+        ''' empty table list for name'''
+        table = []
         for room in rooms:
             if room_name == room_name:
                 for member in room.members:
-                    print (member.name)
+                    #  Adds item to empty list
+                    table.append([room_name, member.name])
+                    print (Fore.YELLOW + tabulate(table, table_headers, tablefmt="grid"))
+            else:
+                return ' add name'
+        else:
+            print ' add'
+                
+                    # print (member.name)
+        
+    def print_unallocated(self, filename):
+        pass
+    def print_allocations(self, filename):
+        pass
+            
