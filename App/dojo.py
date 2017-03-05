@@ -156,7 +156,7 @@ class Dojo(object):
             else:
                 return ' add name'
         else:
-            print ' add'
+            print 'no room found! please add one by using the create_room command'
                 
                     # print (member.name)
         

@@ -41,7 +41,7 @@ class TestDojo(unittest.TestCase):
     
     def test_add_person_added_successfully(self):
         '''
-        tests that all person(s) are added
+        tests that all person(s) are added succesfully 
         '''
         self.assertEqual(len(self.dojo.all_rooms), 0)
         self.dojo.create_room('brown', 'office')
