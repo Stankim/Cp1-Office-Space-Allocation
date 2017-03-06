@@ -8,11 +8,12 @@ Desc      : Office Allocator model module
 # necessary imports
 # ============================================================================
 import random
+import click
 
 from  App.person import Fellow, Staff
 from  App.rooms import Livingspace, Office
 from tabulate import tabulate
-from colorama import Fore, Back, Style
+from colorama import Fore
 
 class Dojo(object):
 
@@ -26,7 +27,6 @@ class Dojo(object):
         self.vacant_rooms = []
         self.vacant_offices = []
         self.vacant_livingspaces = []
-        self.allocated = []
         self.allocated_people = []
         self.unallocated_people = []
         self.fellows = []
@@ -37,20 +37,24 @@ class Dojo(object):
 
     def create_room(self, name, type_room):
         ''' checks for duplicate room names'''
+
+        print (' ')
         room_names = [room.name for room in self.all_rooms]
         msg = ''
         if name in room_names:
             msg = "sorry, one or more room name's already exists!please choose another name"
             print(msg)
             return msg
+            print ('       ')
         else:
             '''Create new Livingspace for person(s)'''
             if type_room.lower() == 'livingspace':
                 new_room = Livingspace(name)
                 self.livingspace.append(new_room)
                 self.all_rooms.append(new_room)
-                msg = ' A Livingspace called %s has been successfully created!' % new_room.name
+                msg = ' A Livingspace called %s has been successfully created!' % new_room.name 
                 print (msg)
+                print ("    ")
 
             elif type_room.lower() == 'office':
                 new_room = Office(name)
@@ -58,8 +62,10 @@ class Dojo(object):
                 self.all_rooms.append(new_room)
                 msg = ' An office called %s has been successfully created!' % new_room.name
                 print (msg)
+                print ("    ")
             else:
                 print ('invalid')
+                print("     ")
 
 
     def check_vacant_rooms(self):
@@ -86,6 +92,7 @@ class Dojo(object):
 
     def add_person(self, name, category, wants_accomodation= 'N'):
         """Add new person"""
+        print ("    ")
         if category == 'fellow':
             new_person = Fellow(name)
             if wants_accomodation == 'Y':
@@ -94,6 +101,7 @@ class Dojo(object):
                     self.check_vacant_rooms()
                     if not self.vacant_livingspaces:
                         print('There are no rooms available at the moment')
+                        print ("    ")
                         return
                     else:
                         ''' chooses a random room to a user'''
@@ -103,14 +111,17 @@ class Dojo(object):
                         self.all_people.append(new_person)
                         msg = 'Fellow %s has been successfully added and assigned to Livingspace %s !' % (new_person.name, lspace_choice.name)
                         print (msg)
+                        print ("    ")
                         return (msg)
                         ''' Error message if room is not created'''
                     print ('There no rooms, please add one by using the create room command')
+                    print ("    ")
             else:
                 if self.office:
                     self.check_vacant_rooms()
                     if not self.vacant_offices:
                         print ( 'There are no rooms available at the moment')
+                        print ("    ")
                         return
                     else:
                         office_choice = random.choice(self.vacant_offices)
@@ -121,9 +132,12 @@ class Dojo(object):
                         self.allocated_fellows.append(new_person)
                         msg = 'Fellow %s has been successfully added and assigned to office %s !' % (new_person.name, office_choice.name)
                         print (msg)
+                        print ("    ")
                         return (msg)
                     print ('There no rooms, please add one by using the create room command')
+                    print ("    ")
         elif category == 'staff':
+            print ("    ")
             new_person = Staff(name)
             if self.office:
                 self.check_vacant_rooms()
@@ -139,6 +153,7 @@ class Dojo(object):
                     self.allocated_staff.append(new_person)
                     msg = 'Staff %s has been successfully added and assigned to office %s' % (new_person.name, office_choice.name)
                     print (msg)
+                    print ("    ")
             else:
                 print ('There no rooms, please add one by using the create room command')
 
@@ -156,9 +171,9 @@ class Dojo(object):
                         table.append([room_name, member.name,category])
                         print (Fore.YELLOW + tabulate(table, table_headers, tablefmt="grid"))
                     else:
-                     return (' add name')
-        else:
-             print ('add')           
+                        return ('add name')
+            else:
+                print ('add')
                     # print (member.name)
         
     def print_unallocated(self, filename):

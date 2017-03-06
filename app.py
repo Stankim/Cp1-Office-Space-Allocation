@@ -18,9 +18,11 @@ Options:
 
 import sys
 import cmd
+import click
 from docopt import docopt, DocoptExit
 from App.dojo import Dojo
 from App.person import Fellow, Staff
+from intro import intro_dojo
 from pyfiglet import figlet_format
 from termcolor import cprint
 dojo = Dojo()
@@ -55,11 +57,13 @@ def docopt_cmd(func):
     fn.__dict__.update(func.__dict__)
     return fn
 
+def start():
+    intro_dojo()
+
 
 class Interactive (cmd.Cmd):
-    cprint(figlet_format(' THE DOJO', font='univers'), 'yellow', attrs=['bold'])
-    intro = 'Welcome to Dojo office allocation!' \
-        + ' (type help for a list of commands.)'
+   
+
     prompt = '(dojo) '
     file = None
     
@@ -111,6 +115,7 @@ class Interactive (cmd.Cmd):
 opt = docopt(__doc__, sys.argv[1:])
 
 if opt['--interactive']:
+    start()
     Interactive().cmdloop()
 
 print(opt)
