@@ -24,7 +24,7 @@ class Office(Room):
     '''
 
     def __init__(self, name):
-        super(Office, self).__init__(name)
+        super(Office, self).__init__(name, capacity = 6)
 
     def __repr__(self):
         return '<Office %s >' % self.name
@@ -35,7 +35,7 @@ class Livingspace(Room):
     capacity = 4
 
     def __init__(self, name):
-        super(Livingspace, self).__init__(name)
+        super(Livingspace, self).__init__(name, capacity = 4)
 
     def __repr__(self):
         return '<Livingspace %s >' % self.name

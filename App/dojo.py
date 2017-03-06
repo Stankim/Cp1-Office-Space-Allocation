@@ -114,8 +114,8 @@ class Dojo(object):
                         print ("    ")
                         return (msg)
                         ''' Error message if room is not created'''
-                    print ('There no rooms, please add one by using the create room command')
-                    print ("    ")
+                print ('There no rooms, please add one by using the create room command')
+                print ("    ")
             else:
                 if self.office:
                     self.check_vacant_rooms()
