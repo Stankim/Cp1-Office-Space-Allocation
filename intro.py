@@ -12,17 +12,17 @@ def intro_dojo():
                            label=click.secho(
             '\t\t\tLOADING DOJO....',
                            blink=True, bold=True),
-                           fill_char=click.style('  ', bg='cyan')) as prog_bar:
+                           fill_char=click.style('  ', bold=True,bg='cyan')) as prog_bar:
         for i in prog_bar:
             pass
     click.secho("   ")        
     time.sleep(0.6)
-    click.secho('=' * 75, fg='yellow')
+    click.secho('=' * 75, bold=True, fg='yellow')
     click.secho("   ")
     init(strip=not sys.stdout.isatty())  
     cprint(figlet_format('Dojo', font='roman'),
            'cyan', attrs=['bold'])
-    click.secho('=' * 75, fg='yellow')
+    click.secho('=' * 75, bold=True,fg='yellow')
     click.secho("   ")
     intro = click.secho('Welcome to the Dojo office allocation!' \
     + ' (type help for a list of commands.)',bold=True, fg='green')

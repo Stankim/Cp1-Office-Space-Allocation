@@ -9,8 +9,9 @@ class Room(object):
     This creates a Room object where the class Office
     and Livingspace inherit from
     '''
-    def __init__(self, name):
+    def __init__(self, name, capacity):
         self.name = name
+        self.capacity = capacity
         self.members = []
 
     def __repr__(self):
@@ -18,24 +19,25 @@ class Room(object):
 
 class Office(Room):
 
-    capacity = 6
     '''
     initialization module
     '''
 
     def __init__(self, name):
-        super(Office, self).__init__(name, capacity = 6)
+        super(Office, self).__init__(name, capacity=6)
 
     def __repr__(self):
         return '<Office %s >' % self.name
 
 
 class Livingspace(Room):
-
-    capacity = 4
+    
+    '''
+    initialization module
+    '''    
 
     def __init__(self, name):
-        super(Livingspace, self).__init__(name, capacity = 4)
+        super(Livingspace, self).__init__(name, capacity=4)
 
     def __repr__(self):
         return '<Livingspace %s >' % self.name
