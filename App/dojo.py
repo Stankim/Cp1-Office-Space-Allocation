@@ -120,8 +120,9 @@ class Dojo(object):
                 if self.office:
                     self.check_vacant_rooms()
                     if not self.vacant_offices:
-                        print ( 'There are no rooms available at the moment')
-                        print ("    ")
+                            
+                        msg = 'There are no rooms available at the moment'
+                        click.secho(msg,bold=True, fg='red')
                         return
                     else:
                         office_choice = random.choice(self.vacant_offices)
