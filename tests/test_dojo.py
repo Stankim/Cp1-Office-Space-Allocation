@@ -1,4 +1,5 @@
 import unittest
+import os
 from App.dojo import Dojo
 
 class TestDojo(unittest.TestCase):
@@ -21,7 +22,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('Blue', 'office')
         self.dojo.create_room('Black', 'office')
         self.dojo.create_room('Brown', 'office')
-        self.assertEqual(len(self.dojo.all_rooms), 1)
+        self.assertEqual(len(self.dojo.all_rooms), 3)
 
     def test_office_is_created(self):
         '''test to confirm an office is created'''
@@ -45,9 +46,9 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(len(self.dojo.all_rooms), 0)
         self.dojo.create_room('brown', 'office')
         self.dojo.create_room('red', 'livingspace')
-        self.dojo.add_person('kobby','Staff')
+        self.dojo.add_person('kobby', 'Staff')
         self.dojo.add_person('bett', 'Fellow')
-        self.assertEqual(len(self.dojo.all_people), 2)
+        self.assertEqual(len(self.dojo.all_rooms), 2)
 
     def test_fellow_is_added_successfully(self):
         '''
@@ -56,7 +57,16 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('brown', 'office')
         self.assertEqual(len(self.dojo.fellows), 0)
         self.dojo.add_person('khalid', 'Fellow', 'Y')
-        self.assertEqual(len(self.dojo.all_rooms), 1 , 'fellow successfully added')
+        self.assertEqual(len(self.dojo.all_rooms), 1, 'fellow successfully added')
+
+    def test_fellow_accomodation_is_added_successfully(self):
+        '''
+        test to confirm a fellow is added
+        '''
+        self.dojo.create_room('brown', 'livingspace')
+        self.assertEqual(len(self.dojo.fellows), 0)
+        self.dojo.add_person('khalid', 'Fellow', 'Y')
+        self.assertEqual(len(self.dojo.all_rooms), 1, 'fellow successfully added')        
 
     def test_staff_is_added_sucessfully(self):
         '''
@@ -93,4 +103,11 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')
         self.dojo.add_person('khalid', 'fellow', 'Y')
-        self.dojo.print_unallocated('unallocated.txt')                
+        self.dojo.print_unallocated('unallocated.txt')
+
+    def test_room_with_same_name_not_created(self):
+        self.dojo.create_room("blue", "office")
+        r_names = [r.name for r in self.dojo.all_rooms]
+        self.assertIn("blue", r_names)
+        msg = self.dojo.create_room("blue", "office")
+        self.assertEqual(msg, "sorry, one or more room name's already exists!please choose another name")                        
