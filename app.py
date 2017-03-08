@@ -78,8 +78,7 @@ class Interactive (cmd.Cmd):
         
     @docopt_cmd
     def do_add_person(self, arg):
-        """
-        Creates a person and assign them to a room in Dojo.
+        """ Creates a person and assign them to a room in Dojo.
         Usage:
             add_person <first_name> <last_name> <role> [<accomodation>]
         """
