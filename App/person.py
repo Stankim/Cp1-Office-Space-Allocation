@@ -13,18 +13,17 @@ class Person(object):
     
     def __init__(self, name):
         self.name = name
-        self.office = None
-        # self.category = category
+        self.wants_accomodation = 'N'
 
     def __repr__(self):
         return '<Person %s>' % self.name
 
 class Fellow(Person):
     
-    def __init__(self, name, wants_accomodation='N'):
+    def __init__(self, name):
         super(Fellow, self).__init__(name)
-        self.wants_accomodation = wants_accomodation
-        # self.hostel = None
+        
+
 
     def __repr__(self):
         return '<Fellow %s>' % self.name

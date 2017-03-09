@@ -99,8 +99,8 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('red', 'office')
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')        
-        self.assertEqual(len(self.dojo.vacant_livingspaces), 1)
-        self.assertEqual(len(self.dojo.vacant_offices), 1) 
+        self.assertEqual(len(self.dojo.dojo_lspace), 1)
+        self.assertEqual(len(self.dojo.dojo_office), 1) 
         
     def test_print_room(self):
         '''test that members of a room are printed'''
@@ -136,12 +136,12 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')
         self.dojo.add_person('khalid', 'fellow', 'Y')
-        self.dojo.print_allocations('allocations.txt')
+        self.dojo.print_allocations('allocations')
 
     def test_print_unallocated_filename(self):
         '''test that unallocated people are printed to a file'''
         self.dojo.create_room('blue', 'office')
-        self.dojo.create_room('brown', 'livingspace')
+        self.dojo.create_room('brown', 'office')
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')
         self.dojo.add_person('khalid', 'fellow', 'Y')

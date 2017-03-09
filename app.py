@@ -103,8 +103,30 @@ class Interactive (cmd.Cmd):
         """
         room_name = arg['<room_name>']
 
-        dojo.print_room(room_name)        
+        dojo.print_room(room_name)
 
+
+    @docopt_cmd
+    def do_print_allocations(self, arg):
+        """
+        This function prints the members of a given room
+        Usage:
+            print_allocations [--o=filename]
+        """
+        filename = arg["--o"]
+
+        dojo.print_allocations(filename)
+
+    @docopt_cmd
+    def do_print_unallocated(self, arg):
+        """
+        This function prints the members of a given room
+        Usage:
+            print_unallocated [--o=filename]
+        """
+        filename = arg["--o"]
+
+        dojo.print_unallocated(filename)
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
