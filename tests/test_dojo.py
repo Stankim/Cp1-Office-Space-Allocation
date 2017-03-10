@@ -141,7 +141,7 @@ class TestDojo(unittest.TestCase):
     def test_print_unallocated_filename(self):
         '''test that unallocated people are printed to a file'''
         self.dojo.create_room('blue', 'office')
-        self.dojo.create_room('brown', 'office')
+        self.dojo.create_room('brown', 'livingspace')
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')
         self.dojo.add_person('khalid', 'fellow', 'Y')

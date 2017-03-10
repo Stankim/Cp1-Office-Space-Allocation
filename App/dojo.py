@@ -13,8 +13,7 @@ import time
 
 from  App.person import Fellow, Staff
 from  App.rooms import Livingspace, Office
-from tabulate import tabulate
-from colorama import Fore
+
 
 class Dojo(object):
     '''
@@ -33,6 +32,7 @@ class Dojo(object):
         self.available_rooms = []
         self.dojo_office = []
         self.dojo_lspace = []
+        self.unallocated = []
     def create_room(self, name, type_room):
         '''
         The create_room function uses the arguments name and
@@ -96,69 +96,108 @@ class Dojo(object):
                 if livingspace in self.dojo_lspace:
                     self.dojo_lspace.remove(livingspace)
                     self.available_rooms.remove(livingspace)
-
     def add_person(self, name, category, wants_accomodation='N'):
         '''
         This function creates a person and allocates
         the person to a random room
         '''
-        click.secho('ADDING %s  ...' % (name.upper()), bold=True,fg='magenta')
-        time.sleep(1)         
-        print ("    ")
-        room_names = [room.name for room in self.all_rooms]
-        if category == 'fellow':
-            if wants_accomodation == 'Y':
-                new_person = Fellow(name)
-                if self.livingspace and self.office:
-                    self.room_capacity()
-                    if not self.dojo_lspace:
-                        msg = 'Livingspace %s has reached its maximum please add another room!'\
-                         %(room.name.capitalize())
+        # validates input of duplicate names in the system
+        all_names = [person.name for person in self.all_people]
+        if name in all_names:
+            msg="Sorry, %s already exists.please choose another name" %(person.name.capitalize())
+            click.secho(msg.upper(),bold=True, fg='red')
+            return msg
+        else:
+            click.secho('ADDING %s  ...' % (name.upper()), bold=True,fg='magenta')
+            time.sleep(1)         
+            print ("    ")
+            room_names = [room.name for room in self.all_rooms] #gets room name of rooms added
+            # adding a fellow with accomodation 
+            if category == 'fellow':
+                if wants_accomodation == 'Y':
+                    new_person = Fellow(name)
+                    if self.livingspace and self.office:
+                        self.room_capacity()
+                        if not self.dojo_lspace:
+                            # if fellow is added with no allocation of a livingspace
+                            self.unallocated.append(new_person)
+                            msg = 'Livingspace %s has reached its maximum please add another room!'\
+                            %(room.name.capitalize())
+                            click.secho(msg,bold=True, fg='red')
+                            return
+                        if not self.dojo_office:
+                            msg = 'The Office %s has reached its maximum please add another room!'\
+                            %(room.name.capitalize())
+                            click.secho(msg,bold=True, fg='red')
+                            return
+                        else:
+                            # allocate an office and a livingspace to a person
+                            # a random office and livingspace is generated
+                            l_choice = random.choice(self.dojo_lspace)
+                            #  Also, assign a fellow with accomodation a random office
+                            o_choice = random.choice(self.dojo_office)
+                            l_choice.members.append(new_person)
+                            o_choice.members.append(new_person)
+                            # add person to fellow list
+                            self.fellows.append(new_person)
+                            # add the person to all rooms
+                            self.all_people.append(new_person)
+                            msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
+                                    \nLivingspace: %s  |  Office: %s ' \
+                                    %(new_person.name.capitalize(),new_person.name.capitalize(),\
+                                    l_choice.name.capitalize(), o_choice.name.capitalize())
+                            click.secho(msg,bold=False, fg='cyan')
+                            print ("    ")
+                    else:
+                        msg = 'No Rooms found please add one with the create command.'
                         click.secho(msg,bold=True, fg='red')
+                        print(' ')
                         return
+
+                else:
+                    # Adding a fellow who wants office space only
+                    new_person = Fellow(name)
+                    if self .office:
+                        self.room_capacity()
+                        if not self.dojo_office:     
+                            msg = 'The Office %s has reached its maximum please add another room!'\
+                            %(room.name.capitalize())
+                            click.secho(msg,bold=True, fg='red')
+                            return
+                        else:
+                            office_choice = random.choice(self.dojo_office)
+                            ''' Adds user to room mebers list'''
+                            office_choice.members.append(new_person)
+                            # add person to fellow list
+                            self.fellows.append(new_person)
+                            # add the person to all rooms
+                            msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
+                                        \nOffice: %s  |  Livingspace: None ' \
+                                    %(new_person.name.capitalize(),new_person.name.capitalize(),\
+                                    office_choice.name.capitalize())
+                            click.secho(msg,bold=False, fg='cyan')
+                            print ("    ")
+                    else:
+                        msg = 'No Rooms found please add one with the create command.'
+                        click.secho(msg,bold=True, fg='red')
+                        print ("    ")                    
+            elif category == 'staff':
+                print ("    ")
+                new_person = Staff(name)
+                if self.office:
+                    self.room_capacity()
                     if not self.dojo_office:
                         msg = 'The Office %s has reached its maximum please add another room!'\
-                         %(room.name.capitalize())
-                        click.secho(msg,bold=True, fg='red')
-                        return
-                    else:
-                        # allocate an office and a livingspace to a person
-                        # a random office and livingspace is generated
-                        l_choice = random.choice(self.dojo_lspace)
-                        o_choice = random.choice(self.dojo_office)
-                        l_choice.members.append(new_person)
-                        o_choice.members.append(new_person)
-                        # adding new person to list
-                        self.fellows.append(new_person)
-                        self.all_people.append(new_person)
-                        msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
-                                 \nLivingspace: %s  |  Office: %s ' \
-                                %(new_person.name.capitalize(),new_person.name.capitalize(),\
-                                 l_choice.name.capitalize(), o_choice.name.capitalize())
-                        click.secho(msg,bold=False, fg='cyan')
-                        print ("    ")
-                else:
-                    msg = 'No Rooms found please add one with the create command.'
-                    click.secho(msg,bold=True, fg='red')
-                    print(' ')
-                    return
-
-            else:
-                new_person = Fellow(name)
-                if self .office:
-                    self.room_capacity()
-                    if not self.dojo_office:     
-                        msg = 'The Office %s has reached its maximum please add another room!'\
-                         %(room.name.capitalize())
+                        %(room.name.capitalize())
                         click.secho(msg,bold=True, fg='red')
                         return
                     else:
                         office_choice = random.choice(self.dojo_office)
-                        ''' Adds user to room mebers list'''
+                        new_person = Staff(name)
                         office_choice.members.append(new_person)
-                        self.fellows.append(new_person)
+                        self.staff.append(new_person)
                         self.all_people.append(new_person)
-                        msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
+                        msg = 'Staff %s has been successfully added ! \n%s has been allocated to :\
                                     \nOffice: %s  |  Livingspace: None ' \
                                 %(new_person.name.capitalize(),new_person.name.capitalize(),\
                                 office_choice.name.capitalize())
@@ -167,33 +206,7 @@ class Dojo(object):
                 else:
                     msg = 'No Rooms found please add one with the create command.'
                     click.secho(msg,bold=True, fg='red')
-                    print ("    ")                    
-        elif category == 'staff':
-            print ("    ")
-            new_person = Staff(name)
-            if self.office:
-                self.room_capacity()
-                if not self.dojo_office:
-                    msg = 'The Office %s has reached its maximum please add another room!'\
-                     %(room.name.capitalize())
-                    click.secho(msg,bold=True, fg='red')
-                    return
-                else:
-                    office_choice = random.choice(self.dojo_office)
-                    new_person = Staff(name)
-                    office_choice.members.append(new_person)
-                    self.staff.append(new_person)
-                    self.all_people.append(new_person)
-                    msg = 'Staff %s has been successfully added ! \n%s has been allocated to :\
-                                \nOffice: %s  |  Livingspace: None ' \
-                            %(new_person.name.capitalize(),new_person.name.capitalize(),\
-                             office_choice.name.capitalize())
-                    click.secho(msg,bold=False, fg='cyan')
                     print ("    ")
-            else:
-                msg = 'No Rooms found please add one with the create command.'
-                click.secho(msg,bold=True, fg='red')
-                print ("    ")
 
     def print_room(self, room_name):
         '''
@@ -211,7 +224,7 @@ class Dojo(object):
             if room_name == room.name:
                 print(" ")
                 click.secho('=' * 30, fg='yellow')
-                click.secho( '%s ' %(room_name.capitalize()), fg='white', bold=True)
+                click.secho('%s ' %(room_name.capitalize()), fg='white', bold=True)
                 click.secho('=' * 30, fg='yellow')
                 if room.members:
                     # go through each and every member in a room
@@ -237,15 +250,15 @@ class Dojo(object):
         # checks for rooms not added or created
         rooms = self.all_rooms
         if not rooms:
-            click.secho('No rooms found in the system',bold=True, fg='red')
+            click.secho('No rooms found in the Dojo', bold=True, fg='red')
             return
         output = ''
         for room in rooms:
-            output += '==' * 20
+            output += '==' * 15
             output += '\n'
             output += room.name.upper()
             output += '\n'
-            output += '==' * 20
+            output += '==' * 15
             output += '\n'
             # go through all members added
             if room.members:
@@ -264,34 +277,41 @@ class Dojo(object):
         else:
             # prints the list of allocations to a specified file(.txt)
             click.secho('PLEASE WAIT...', bold=True, fg='magenta')
-            time.sleep(1)   
-            print(' ')          
+            time.sleep(1)
+            print(' ')
             text = ''
             for room in rooms:
                 text += room.name.upper() + "\n"
                 text += "-" * 50 + "\n"
                 if room.members:
-                    text += " , " .join(member.name for member in room.members) + '\n'
+                    text += " , " .join(member.name.capitalize() for member in room.members) + '\n'
                     text += '\n'
-            # specify the fomart and mode        
+            # specify the fomart and mode
             file = open(filename + '.txt', 'w')
             file.write(text)
-            click.secho('Your allocation list has been saved sucessfully \nas %s.txt' % filename,bold=True, fg='green')
+            click.secho('Your allocation list has been saved sucessfully \nas %s.txt'\
+             % filename, bold=True, fg='green')
             return
 
     def print_unallocated(self, filename):
-        allocated = self.all_people
-        self.unallocated = []
+        unallocated = self.unallocated
+        if not unallocated:
+            click.secho('No rooms found in the Dojo', bold=True, fg='red')
+            return        
         output = ''
         output += "=" * 20 + "\n"
         output += "Unallocated People\n"
         output += "=" * 20 + "\n"
-        for person in allocated:
-            if person not in allocated:
-                output += person.name + '\n'
-                if person not in self.unallocated:
-                    self.unallocated.append(person)
-        click.secho(output, fg='yellow')
-
-
-            
+        for person in unallocated:
+            output += person.name + '\n'
+        else:
+            output += 'There are no people  yet.'
+            output += '\n' 
+        if filename == None:
+            click.secho(output, fg='yellow')
+        else:
+            file = open(filename + 'txt', 'w')
+            file.write(output)
+            click.secho('Your allocation list has been saved sucessfully \nas %s.txt'\
+            % filename, bold=True, fg='green')
+            return
