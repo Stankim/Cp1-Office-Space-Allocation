@@ -136,7 +136,8 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')
         self.dojo.add_person('khalid', 'fellow', 'Y')
-        self.dojo.print_allocations('allocations')
+        self.dojo.print_allocations('allocated')
+        self.assertTrue(os.path.isfile('allocated.txt')) 
 
     def test_print_unallocated_filename(self):
         '''test that unallocated people are printed to a file'''
@@ -145,4 +146,13 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')
         self.dojo.add_person('khalid', 'fellow', 'Y')
-        self.dojo.print_unallocated('unallocated.txt')                           
+        self.dojo.print_unallocated('unallocated') 
+        self.assertTrue(os.path.isfile('unallocated.txt'))      
+
+    # def test_print_allocations(self):
+    #     self.dojo.print_allocations('allocated.')
+    #     self.assertTrue(os.path.isfile('allocated.txt')) 
+
+    # def test_print_unallocated(self):
+    #     self.dojo.print_unallocated('unallocated')
+    #     self.assertFalse(os.path.isfile('unallocated')) 
