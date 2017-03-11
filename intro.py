@@ -12,7 +12,7 @@ def intro_dojo():
                            label=click.secho(
             '\t\t\tLOADING DOJO....',
                            blink=True, bold=True),
-                           fill_char=click.style('  ', bold=True,bg='cyan')) as prog_bar:
+                           fill_char=click.style('  ', bold=True,bg='green')) as prog_bar:
         for i in prog_bar:
             pass
     click.secho("   ")        
