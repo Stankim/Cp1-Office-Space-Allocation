@@ -170,7 +170,8 @@ class Dojo(object):
                             office_choice.members.append(new_person)
                             # add person to fellow list
                             self.fellows.append(new_person)
-                            # add the person to all rooms
+                            # add the person to all people list
+                            self.all_people.append(new_person)
                             msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
                                         \nOffice: %s  |  Livingspace: None ' \
                                     %(new_person.name.capitalize(),new_person.name.capitalize(),\
