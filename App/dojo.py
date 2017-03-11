@@ -149,7 +149,7 @@ class Dojo(object):
                             click.secho(msg,bold=False, fg='cyan')
                             print ("    ")
                     else:
-                        msg = 'No Rooms found please add one with the create command.'
+                        msg = 'No Livingspaces found please add one with the create command.'
                         click.secho(msg,bold=True, fg='red')
                         print(' ')
                         return
@@ -179,7 +179,7 @@ class Dojo(object):
                             click.secho(msg,bold=False, fg='cyan')
                             print ("    ")
                     else:
-                        msg = 'No Rooms found please add one with the create command.'
+                        msg = 'No offices found please add one with the create command.'
                         click.secho(msg,bold=True, fg='red')
                         print ("    ")                    
             elif category == 'staff':
@@ -205,9 +205,14 @@ class Dojo(object):
                         click.secho(msg,bold=False, fg='cyan')
                         print ("    ")
                 else:
-                    msg = 'No Rooms found please add one with the create command.'
+                    msg = 'No officesfound please add one with the create command.'
                     click.secho(msg,bold=True, fg='red')
                     print ("    ")
+            else:
+                # message if category is invalid
+                print('Please enter either fellow or staff for adding person')
+                print ("    ")
+                return        
 
     def print_room(self, room_name):
         '''
