@@ -8,12 +8,11 @@ Desc      : Office Allocator model module
 # necessary imports
 # ============================================================================
 import random
-import click
 import time
+import click
 
 from  App.person import Fellow, Staff
 from  App.rooms import Livingspace, Office
-
 
 class Dojo(object):
     '''
@@ -149,14 +148,21 @@ class Dojo(object):
                             click.secho(msg,bold=False, fg='cyan')
                             print ("    ")
                     else:
-                        msg = 'No Livingspaces or offices found please add one with the create command\
-                         \nPlease note a fellow with accomodation is allocated both an office and a livingspace.'
-                        click.secho(msg,bold=True, fg='red')
-                        return
-                        print(' ')
-
+                        if not self.livingspace:
+                            
+                            msg = 'Please add a Livingspace for a fellow to allocted!'
+                            click.secho(msg, fg='red', bold=True)
+                            print ("    ")
+                            
+                        elif not self.office :
+                            
+                            msg = 'Please add an Office for a fellow to be allocated!'
+                            click.secho(msg, fg='red', bold=True)
+                            return msg                          
+                            print(' ')
+                    return
+                # Adding a fellow who wants office space only       
                 else:
-                    # Adding a fellow who wants office space only
                     new_person = Fellow(name)
                     if self .office:
                         self.room_capacity()
@@ -183,9 +189,11 @@ class Dojo(object):
                         msg = 'No offices found please add one with the create command.'
                         click.secho(msg,bold=True, fg='red')
                         print ("    ")
+            # adding staff with only office option
             elif category == 'staff':
                 if wants_accomodation == 'Y':
-                    click.secho('A Staff member cannot be allocated accomodation only offices \nPlease try again', bold=True, fg='red')
+                    click.secho('A Staff member cannot be allocated accomodation \
+                    only offices \nPlease try again', bold=True, fg='red')
                 else:
                     new_person = Staff(name)
                     if self.office:
@@ -202,7 +210,7 @@ class Dojo(object):
                             self.staff.append(new_person)
                             self.all_people.append(new_person)
                             msg = 'Staff %s has been successfully added ! \n%s has been allocated to :\
-                                        \nOffice: %s  |  Livingspace: None ' \
+                                  \nOffice: %s  |  Livingspace: None ' \
                                     %(new_person.name.capitalize(), new_person.name.capitalize(),\
                                     office_choice.name.capitalize())
                             click.secho(msg, bold=False, fg='cyan')
@@ -232,21 +240,21 @@ class Dojo(object):
             # checks for rooom name that is equal to the name argument given
             if room_name == room.name:
                 print(" ")
-                click.secho('=' * 30, fg='yellow')
+                click.secho('=' * 20, fg='yellow')
                 click.secho('%s ' %(room_name.capitalize()), fg='white', bold=True)
-                click.secho('=' * 30, fg='yellow')
+                click.secho('=' * 20, fg='yellow')
                 if room.members:
                     # go through each and every member in a room
                     for member in room.members:
-                        click.secho(member.name, fg='cyan')
+                        click.secho(member.name.capitalize(), fg='cyan')
                 else:
                     # if a created room is empty with no members
                     click.secho('No members found :(.', fg='cyan', bold=True)
-                click.secho('=' * 30, fg='yellow')
+                click.secho('=' * 20, fg='yellow')
                 print ("    ")
                 return False
+        # if no room is added
         else:
-            # if no room is created 
             click.secho('Room %s seems not to exist would you like to add it?'\
             % (room_name.capitalize()), fg='red', bold=True)
             print ("    ")
@@ -261,22 +269,25 @@ class Dojo(object):
         if not rooms:
             click.secho('No rooms found in the Dojo', bold=True, fg='red')
             return
+        click.secho('PRINTING ALLOCATIONS...', bold=True, fg='magenta')
+        time.sleep(1)
+        print(' ')
         output = ''
         for room in rooms:
-            output += '==' * 15
+            output += '=' * 25
             output += '\n'
             output += room.name.upper()
             output += '\n'
-            output += '==' * 15
+            output += '=' * 25
             output += '\n'
             # go through all members added
             if room.members:
                 for member in room.members:
-                    output += member.name
+                    output += member.name.capitalize()
                     output += '\n'
             else:
                 # prints out a created room with no members
-                output += 'There are no people  yet.'
+                output += 'There are no people yet.'
                 output += '\n'
         # This prints a list of all allocations onto the screen without the
         # optional --o
@@ -291,10 +302,14 @@ class Dojo(object):
             text = ''
             for room in rooms:
                 text += room.name.upper() + "\n"
-                text += "-" * 50 + "\n"
+                text += "-" * 30 + "\n"
                 if room.members:
-                    text += " , " .join(member.name for member in room.members) + '\n'
+                    text += " , " .join(member.name.capitalize() for member in room.members) + '\n'
                     text += '\n'
+                else:
+                    # prints out a created room with no members
+                    text += 'There are no people yet.'
+                    text += '\n'                    
             # specify the fomart and mode
             file = open(filename + '.txt', 'w')
             file.write(text)
@@ -304,15 +319,12 @@ class Dojo(object):
 
     def print_unallocated(self, filename):
         unallocated = self.unallocated
-        # if not unallocated:
-        #     click.secho('No rooms found in the Dojo', bold=True, fg='red')
-        #     return 
         output = ''
         output += "=" * 20 + "\n"
         output += "Unallocated People\n"
         output += "=" * 20 + "\n"
         for person in unallocated:
-            output += person.name + '\n'
+            output += person.name.capitalize() + '\n'
         if not unallocated:
             output += 'There are no people  yet.'
             output += '\n' 
@@ -324,7 +336,6 @@ class Dojo(object):
             click.secho('Your allocation list has been saved sucessfully \nas %s.txt'\
             % filename, bold=True, fg='green')
             return
-    
     def reallocate_person(self, person_identifier, new_room_name):
         pass
 
