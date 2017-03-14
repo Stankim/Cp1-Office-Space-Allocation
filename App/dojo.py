@@ -118,33 +118,37 @@ class Dojo(object):
                 # add the person to all rooms
                 self.all_people.append(new_person)
                 self.check_room_is_vacant()
-                if not self.dojo_office and self.office is not None:
-                    
-                    self.unallocated.append(new_person)
-                    msg = 'There are no offices or the offices are all full.'
-                    click.secho(msg,bold=True, fg='red')
-                else:
-                    o_choice = random.choice(self.dojo_office)
-                    o_choice.members.append(new_person)
-                    msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
-                        \nOffice: %s ' \
-                        %(new_person.name.capitalize(),new_person.name.capitalize(),\
-                        o_choice.name.capitalize())
-                    click.secho(msg,bold=False, fg='cyan')
-                if wants_accomodation == 'Y':
-                    self.check_room_is_vacant()
-                    if not self.dojo_lspace:
+                if self.office or self.livingspace:
+                    if not self.dojo_office:
                         self.unallocated.append(new_person)
-                        msg = 'There are no Livingspace found or the Livingspaces are all full.'
+                        msg = 'There are no offices or the offices are all full.'
                         click.secho(msg,bold=True, fg='red')
                     else:
-                        click.secho('ALLOCATING LIVINGSPACE ...', fg='magenta')
-                        time.sleep(1.1)
-                        print ('    ')
-                        l_choice = random.choice(self.dojo_lspace)
-                        l_choice.members.append(new_person)
-                        msg = 'Livingspace: %s' %(l_choice.name.capitalize())
+                        o_choice = random.choice(self.dojo_office)
+                        o_choice.members.append(new_person)
+                        msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
+                            \nOffice: %s ' \
+                            %(new_person.name.capitalize(),new_person.name.capitalize(),\
+                            o_choice.name.capitalize())
                         click.secho(msg,bold=False, fg='cyan')
+                    if wants_accomodation == 'Y':
+                        self.check_room_is_vacant()
+                        if not self.dojo_lspace:
+                            self.unallocated.append(new_person)
+                            msg = 'There are no Livingspace found or the Livingspaces are all full.'
+                            click.secho(msg,bold=True, fg='red')
+                        else:
+                            click.secho('ALLOCATING LIVINGSPACE ...', fg='magenta')
+                            time.sleep(1.1)
+                            print ('    ')
+                            l_choice = random.choice(self.dojo_lspace)
+                            l_choice.members.append(new_person)
+                            msg = 'Livingspace: %s' %(l_choice.name.capitalize())
+                            click.secho(msg,bold=False, fg='cyan')
+                else:
+                    self.unallocated.append(new_person)
+                    click.secho('No Rooms found please add one with the create command.',bold=True, fg='red')
+                            
 
             elif category == 'staff':
                 new_person = Staff(name)
@@ -281,17 +285,5 @@ class Dojo(object):
             click.secho('Your allocation list has been saved sucessfully \nas %s.txt'\
             % filename, bold=True, fg='green')
             return
-    def reallocate_person(self, person_name, new_room_name):
-        # This goes through the list of all people
-        all_names = [person.name for person in self.all_people]
-        for name in all_names:
-            # checks if the name of the person exists
-            if name == 'person_name':
-                if person_name in all_names:
-                    room_type = self.check_room_is_vacant()
-                
-            
-        
 
-    def load_people(self, filename):
-        pass
+

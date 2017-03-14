@@ -165,7 +165,7 @@ class TestDojo(unittest.TestCase):
         office_name = staff.office.name
         self.assertEqual(office_name, 'hogwarts')
         self.dojo.create_room('swift', 'office')
-        self.dojo.reallocate_person('joshua', 'swift')
+        self.dojo.reallocate_person('john', 'swift')
         new_office_name = staff.office.name
         self.assertEqual(new_office_name, 'swift')
 
@@ -175,7 +175,7 @@ class TestDojo(unittest.TestCase):
         staff = self.dojo.staff[0]
         office_name = staff.office.name
         self.assertEqual(office_name, 'hogwarts')
-        self.dojo.reallocate_person('joshua', 'hogwarts')
+        self.dojo.reallocate_person('john', 'hogwarts')
         new_office_name = staff.office.name
         self.assertEqual(new_office_name, 'cant reallocate person to the same room')
 
@@ -197,7 +197,7 @@ class TestDojo(unittest.TestCase):
         staff = self.dojo.staff[0]
         office_name = staff.office.name
         self.assertEqual(office_name, 'php')
-        self.dojo.reallocate_person('joshua', 'php')
+        self.dojo.reallocate_person('jimmy', 'php')
         new_office_name = staff.office.name
         self.assertEqual(new_office_name, "Room doesn't exist!!!")
 

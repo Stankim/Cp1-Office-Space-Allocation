@@ -128,6 +128,21 @@ class Interactive (cmd.Cmd):
 
         dojo.print_unallocated(filename)
 
+    @docopt_cmd
+    def do_load_people(self, arg):
+        """
+        this function reads a lists of people and allocates them a room
+        Usage:
+        this function reads a lists of people and allocates them a room
+            load_people <file_name>
+        """
+        filename = arg['<file_name>']
+
+        dojo.load_people(filename)
+
+
+
+
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
 
