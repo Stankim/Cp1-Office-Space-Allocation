@@ -193,7 +193,7 @@ class TestDojo(unittest.TestCase):
 
     def test_if_a_room_doesnt_exist(self):
         self.dojo.create_room('hogwarts', 'office')
-        self.dojo.add_person('jimmy', 'fellow')
+        self.dojo.add_person('jimmy', 'staff')
         staff = self.dojo.staff[0]
         office_name = staff.office.name
         self.assertEqual(office_name, 'php')
