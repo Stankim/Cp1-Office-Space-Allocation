@@ -145,11 +145,7 @@ class Dojo(object):
                         l_choice.members.append(new_person)
                         msg = 'Livingspace: %s' %(l_choice.name.capitalize())
                         click.secho(msg,bold=False, fg='cyan')
-            # else:
-            #         self.unallocated.append(new_person)
-            #         msg = 'No offices found please add one with the create command.'
-            #         click.secho(msg,bold=True, fg='red')
-            #         print ("    ")
+
             elif category == 'staff':
                 new_person = Staff(name)
                 self.staff.append(new_person)

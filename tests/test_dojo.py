@@ -150,8 +150,8 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('khalid', 'fellow', 'Y')
         self.dojo.print_unallocated('unallocated') 
         self.assertFalse(os.path.isfile('unallocated.txt'))
-        self.assertTrue(os.path.getsize('alocated.txt') > 0)
-        self.assertTrue(os.path.exists('alocated.txt'))
+        self.assertTrue(os.path.getsize('unlocated.txt') > 0)
+        self.assertTrue(os.path.exists('unlocated.txt'))
 
     #    tests for reallocate person starts here --->
     def test_reallocate_person(self):
