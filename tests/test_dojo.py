@@ -131,27 +131,32 @@ class TestDojo(unittest.TestCase):
 
     def test_print_allocations_filename(self):
         '''test that allocated people are printed to a file'''
-        self.dojo.create_room('blue', 'office')
-        self.dojo.create_room('brown', 'livingspace')
+        self.dojo.create_room('BLUE', 'office')
         self.dojo.add_person('kobby', 'staff')
-        self.dojo.add_person('bett', 'fellow')
-        self.dojo.add_person('khalid', 'fellow', 'Y')
         self.dojo.print_allocations('allocated')
         self.assertTrue(os.path.isfile('allocated.txt')) 
-        self.assertTrue(os.path.getsize('alocated.txt') > 0)
-        self.assertTrue(os.path.exists('alocated.txt'))
+        file = open('allocated.txt', 'r')
+        output = file.readlines()
+        first_line = output [0]
+        second_line = output [2]
+        third_line = output[5]
+        self.assertEquals(first_line, 'BLUE' + "\n")
+        self.assertEquals(second_line, 'Kobby' + "\n")
+        self.assertEquals(third_line, "-" * 30 + "\n")
 
     def test_print_unallocated_filename(self):
         '''test that unallocated people are printed to a file'''
-        self.dojo.create_room('blue', 'office')
-        self.dojo.create_room('brown', 'livingspace')
-        self.dojo.add_person('kobby', 'staff')
-        self.dojo.add_person('bett', 'fellow')
-        self.dojo.add_person('khalid', 'fellow', 'Y')
+        self.dojo.add_person('kobby', 'fellow','Y')
         self.dojo.print_unallocated('unallocated') 
-        self.assertFalse(os.path.isfile('unallocated.txt'))
-        self.assertTrue(os.path.getsize('unlocated.txt') > 0)
-        self.assertTrue(os.path.exists('unlocated.txt'))
+        self.assertTrue(os.path.isfile('unallocated.txt'))
+        unallocated_file = open('unallocated.txt', 'r')
+        text = unallocated_file.readlines()
+        first_line = text [0]
+        second_line = text [1]
+        third_line = text[3]
+        self.assertEquals(first_line, "=" * 20 + "\n")
+        self.assertEquals(second_line, 'Unallocated People' + "\n")
+        self.assertEquals(third_line, "Kobby" + '\n') 
 
     #    tests for reallocate person starts here --->
     def test_reallocate_person(self):
@@ -196,7 +201,7 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(office_name, 'php')
         self.dojo.reallocate_person('joshua', 'php')
         new_office_name = staff.office.name
-        self.assertEqual(new_office_name, 'Room doesnt seem to exist')
+        self.assertEqual(new_office_name, "Room doesn't exist!!!")
 
         # test for load people from file --->
     def test_load_people(self):

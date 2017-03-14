@@ -276,13 +276,22 @@ class Dojo(object):
         if filename == None:
             click.secho(output, fg='yellow')
         else:
-            file = open(filename + 'txt', 'w')
+            file = open(filename + '.txt', 'w')
             file.write(output)
             click.secho('Your allocation list has been saved sucessfully \nas %s.txt'\
             % filename, bold=True, fg='green')
             return
-    def reallocate_person(self, person_identifier, new_room_name):
-        pass
+    def reallocate_person(self, person_name, new_room_name):
+        # This goes through the list of all people
+        all_names = [person.name for person in self.all_people]
+        for name in all_names:
+            # checks if the name of the person exists
+            if name == 'person_name':
+                if person_name in all_names:
+                    room_type = self.check_room_is_vacant()
+                
+            
+        
 
     def load_people(self, filename):
         pass
