@@ -139,10 +139,8 @@ class TestDojo(unittest.TestCase):
         output = file.readlines()
         first_line = output [0]
         second_line = output [2]
-        third_line = output[5]
         self.assertEquals(first_line, 'BLUE' + "\n")
         self.assertEquals(second_line, 'Kobby' + "\n")
-        self.assertEquals(third_line, "-" * 30 + "\n")
 
     def test_print_unallocated_filename(self):
         '''test that unallocated people are printed to a file'''
@@ -220,3 +218,14 @@ class TestDojo(unittest.TestCase):
         self.assertTrue(os.path.getsize('sample.txt') > 0)
         self.assertTrue(os.path.exists('sample.txt'))
         self.assertTrue(os.path.isfile('sample.txt'))
+
+    def test_invalid_format(self):
+        load = self.dojo.load_people
+        file = open('invalid.txt', 'w')
+        file.write('SIMON PATTERSON Y FELLOW')
+        res = load(file)
+        self.assertEqual(res, 'Invalid format')
+
+    def test_no_file(self):
+        res = self.dojo.load_people(" ")
+        self.assertEqual(res, 'No such file or dirctory')
