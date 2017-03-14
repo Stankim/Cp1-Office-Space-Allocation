@@ -68,7 +68,7 @@ class Dojo(object):
                 print ('invalid')
                 print("     ")
 
-    def room_capacity(self):
+    def check_room_is_vacant(self):
         '''
         This function adds new rooms to a list where new members
         are allocated and later remove full ones from the list
@@ -95,6 +95,7 @@ class Dojo(object):
                 if livingspace in self.dojo_lspace:
                     self.dojo_lspace.remove(livingspace)
                     self.available_rooms.remove(livingspace)
+
     def add_person(self, name, category, wants_accomodation='N'):
         '''
         This function creates a person and allocates
@@ -108,122 +109,70 @@ class Dojo(object):
             return msg
         else:
             click.secho('ADDING %s  ...' % (name.upper()), bold=True, fg='magenta')
-            time.sleep(1)         
+            time.sleep(1)
             print ("    ")
-            room_names = [room.name for room in self.all_rooms] #gets room name of rooms added
             # adding a fellow with accomodation 
             if category == 'fellow':
-                if wants_accomodation == 'Y':
-                    new_person = Fellow(name)
-                    if self.livingspace and self.office:
-                        self.room_capacity()
-                        if not self.dojo_lspace:
-                            # if fellow is added with no allocation of a livingspace
-                            self.unallocated.append(new_person)
-                            msg = 'Livingspace %s has reached its maximum please add another room!'\
-                            %(room.name.capitalize())
-                            click.secho(msg,bold=True, fg='red')
-                            return
-                        if not self.dojo_office:
-                            msg = 'The Office %s has reached its maximum please add another room!'\
-                            %(room.name.capitalize())
-                            click.secho(msg,bold=True, fg='red')
-                            return
-                        else:
-                            # allocate an office and a livingspace to a person
-                            # a random office and livingspace is generated
-                            l_choice = random.choice(self.dojo_lspace)
-                            #  Also, assign a fellow with accomodation a random office
-                            o_choice = random.choice(self.dojo_office)
-                            l_choice.members.append(new_person)
-                            o_choice.members.append(new_person)
-                            # add person to fellow list
-                            self.fellows.append(new_person)
-                            # add the person to all rooms
-                            self.all_people.append(new_person)
-                            msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
-                                    \nLivingspace: %s  |  Office: %s ' \
-                                    %(new_person.name.capitalize(),new_person.name.capitalize(),\
-                                    l_choice.name.capitalize(), o_choice.name.capitalize())
-                            click.secho(msg,bold=False, fg='cyan')
-                            print ("    ")
-                    else:
-                        if not self.livingspace:
-                            
-                            msg = 'Please add a Livingspace for a fellow to allocted!'
-                            click.secho(msg, fg='red', bold=True)
-                            print ("    ")
-                            
-                        elif not self.office :
-                            
-                            msg = 'Please add an Office for a fellow to be allocated!'
-                            click.secho(msg, fg='red', bold=True)
-                            return msg                          
-                            print(' ')
-                    return
-                # Adding a fellow who wants office space only       
+                new_person = Fellow(name)
+                self.fellows.append(new_person)
+                # add the person to all rooms
+                self.all_people.append(new_person)
+                self.check_room_is_vacant()
+                if not self.dojo_office and self.office is not None:
+                    
+                    self.unallocated.append(new_person)
+                    msg = 'There are no offices or the offices are all full.'
+                    click.secho(msg,bold=True, fg='red')
                 else:
-                    new_person = Fellow(name)
-                    if self .office:
-                        self.room_capacity()
-                        if not self.dojo_office:     
-                            msg = 'The Office %s has reached its maximum please add another room!'\
-                            %(room.name.capitalize())
-                            click.secho(msg,bold=True, fg='red')
-                            return
-                        else:
-                            office_choice = random.choice(self.dojo_office)
-                            ''' Adds user to room mebers list'''
-                            office_choice.members.append(new_person)
-                            # add person to fellow list
-                            self.fellows.append(new_person)
-                            # add the person to all people list
-                            self.all_people.append(new_person)
-                            msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
-                                        \nOffice: %s  |  Livingspace: None ' \
-                                    %(new_person.name.capitalize(),new_person.name.capitalize(),\
-                                    office_choice.name.capitalize())
-                            click.secho(msg,bold=False, fg='cyan')
-                            print ("    ")
-                    else:
-                        msg = 'No offices found please add one with the create command.'
+                    o_choice = random.choice(self.dojo_office)
+                    o_choice.members.append(new_person)
+                    msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
+                        \nOffice: %s ' \
+                        %(new_person.name.capitalize(),new_person.name.capitalize(),\
+                        o_choice.name.capitalize())
+                    click.secho(msg,bold=False, fg='cyan')
+                if wants_accomodation == 'Y':
+                    self.check_room_is_vacant()
+                    if not self.dojo_lspace:
+                        self.unallocated.append(new_person)
+                        msg = 'There are no Livingspace found or the Livingspaces are all full.'
                         click.secho(msg,bold=True, fg='red')
-                        print ("    ")
-            # adding staff with only office option
-            elif category == 'staff':
-                if wants_accomodation == 'Y':
-                    click.secho('A Staff member cannot be allocated accomodation \
-                    only offices \nPlease try again', bold=True, fg='red')
-                else:
-                    new_person = Staff(name)
-                    if self.office:
-                        self.room_capacity()
-                        if not self.dojo_office:
-                            msg = 'The Office %s has reached its maximum please add another room!'\
-                            %(room.name.capitalize())
-                            click.secho(msg, bold=True, fg='red')
-                            return
-                        else:
-                            office_choice = random.choice(self.dojo_office)
-                            new_person = Staff(name)
-                            office_choice.members.append(new_person)
-                            self.staff.append(new_person)
-                            self.all_people.append(new_person)
-                            msg = 'Staff %s has been successfully added ! \n%s has been allocated to :\
-                                  \nOffice: %s  |  Livingspace: None ' \
-                                    %(new_person.name.capitalize(), new_person.name.capitalize(),\
-                                    office_choice.name.capitalize())
-                            click.secho(msg, bold=False, fg='cyan')
-                            print ("    ")
                     else:
-                        msg = 'No offices found please add one with the create command.'
-                        click.secho(msg, bold=True, fg='red')
-                        print ("    ")
-            else:
-                # Error message if add person category is wrongly typed
-                click.secho('Please enter either fellow or staff for adding person', bold=True, fg='red')
-                print ("    ")
-                return
+                        click.secho('ALLOCATING LIVINGSPACE ...', fg='magenta')
+                        time.sleep(1.1)
+                        print ('    ')
+                        l_choice = random.choice(self.dojo_lspace)
+                        l_choice.members.append(new_person)
+                        msg = 'Livingspace: %s' %(l_choice.name.capitalize())
+                        click.secho(msg,bold=False, fg='cyan')
+            # else:
+            #         self.unallocated.append(new_person)
+            #         msg = 'No offices found please add one with the create command.'
+            #         click.secho(msg,bold=True, fg='red')
+            #         print ("    ")
+            elif category == 'staff':
+                new_person = Staff(name)
+                self.staff.append(new_person)
+                # add the person to all rooms
+                self.all_people.append(new_person)
+                if self.office:
+                    self.check_room_is_vacant()
+                    if not self.dojo_office:
+                        self.unallocated.append(new_person)
+                        msg = 'One of the  Offices reached its maximum please add another office!'
+                        click.secho(msg,bold=True, fg='red')
+                    else:
+                        o_choice = random.choice(self.dojo_office)
+                        o_choice.members.append(new_person)
+                        msg = 'Staff %s has been successfully added ! \n%s has been allocated to :\
+                            \nOffice: %s ' \
+                            %(new_person.name.capitalize(),new_person.name.capitalize(),\
+                            o_choice.name.capitalize())
+                        click.secho(msg,bold=False, fg='cyan')
+                else:
+                    self.unallocated.append(new_person)
+                    msg = 'No offices found please add one with the create command.'
+                    click.secho(msg,bold=True, fg='red')                        
 
     def print_room(self, room_name):
         '''

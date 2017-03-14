@@ -138,6 +138,8 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('khalid', 'fellow', 'Y')
         self.dojo.print_allocations('allocated')
         self.assertTrue(os.path.isfile('allocated.txt')) 
+        self.assertTrue(os.path.getsize('alocated.txt') > 0)
+        self.assertTrue(os.path.exists('alocated.txt'))
 
     def test_print_unallocated_filename(self):
         '''test that unallocated people are printed to a file'''
@@ -147,4 +149,69 @@ class TestDojo(unittest.TestCase):
         self.dojo.add_person('bett', 'fellow')
         self.dojo.add_person('khalid', 'fellow', 'Y')
         self.dojo.print_unallocated('unallocated') 
-        self.assertFalse(os.path.isfile('unallocated.txt'))      
+        self.assertFalse(os.path.isfile('unallocated.txt'))
+        self.assertTrue(os.path.getsize('alocated.txt') > 0)
+        self.assertTrue(os.path.exists('alocated.txt'))
+
+    #    tests for reallocate person starts here --->
+    def test_reallocate_person(self):
+        '''test that a person has been reallocated to a different room'''
+        self.dojo.create_room('hogwarts', 'office')
+        self.dojo.add_person('john', 'staff')
+        staff = self.dojo.staff[0]
+        office_name = staff.office.name
+        self.assertEqual(office_name, 'hogwarts')
+        self.dojo.create_room('swift', 'office')
+        self.dojo.reallocate_person('joshua', 'swift')
+        new_office_name = staff.office.name
+        self.assertEqual(new_office_name, 'swift')
+
+    def test_if_reallocated_to_the_same_room(self):
+        self.dojo.create_room('hogwarts', 'office')
+        self.dojo.add_person('john', 'staff')
+        staff = self.dojo.staff[0]
+        office_name = staff.office.name
+        self.assertEqual(office_name, 'hogwarts')
+        self.dojo.reallocate_person('joshua', 'hogwarts')
+        new_office_name = staff.office.name
+        self.assertEqual(new_office_name, 'cant reallocate person to the same room')
+
+    def test_a_person_has_been_removed_from_a_room_after_reallocation(self):
+        self.dojo.create_room('hogwarts', 'office')
+        self.dojo.add_person('wick', 'fellow')
+        office = self.dojo.dojo_office[0]
+        members = office.members
+        self.assertEqual(len(members), 1)
+        self.dojo.create_room('php', 'office')
+        self.dojo.reallocate_person('wick', 'php')
+        office = self.dojo.dojo_office[0]
+        members = office.members
+        self.assertEqual(len(members), 0)
+
+    def test_if_a_room_doesnt_exist(self):
+        self.dojo.create_room('hogwarts', 'office')
+        self.dojo.add_person('jimmy', 'fellow')
+        staff = self.dojo.staff[0]
+        office_name = staff.office.name
+        self.assertEqual(office_name, 'php')
+        self.dojo.reallocate_person('joshua', 'php')
+        new_office_name = staff.office.name
+        self.assertEqual(new_office_name, 'Room doesnt seem to exist')
+
+        # test for load people from file --->
+    def test_load_people(self):
+        self.dojo.create_room('hogwarts', 'office')
+        self.dojo.create_room('swift', 'livingspace')
+        staff = self.dojo.staff
+        fellows = self.dojo.fellows
+        self.assertEqual(len(staff), 0)
+        self.assertEqual(len(fellows), 0)
+        self.dojo.load_people("sample.txt")
+        self.assertEqual(len(staff), 3)
+        self.assertEqual(len(fellows), 4)
+
+    def test_load_from_file(self):
+        # checks if file is populated with data
+        self.assertTrue(os.path.getsize('sample.txt') > 0)
+        self.assertTrue(os.path.exists('sample.txt'))
+        self.assertTrue(os.path.isfile('sample.txt'))
