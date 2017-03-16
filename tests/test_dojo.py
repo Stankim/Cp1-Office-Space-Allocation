@@ -195,7 +195,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('hogwarts', 'office')
         self.dojo.add_person('jimmy', 'staff')
         staff = self.dojo.staff[0]
-        office_name = staff.office.name
+        office_name = self.dojo.available_rooms
         self.assertEqual(office_name, 'php')
         self.dojo.reallocate_person('jimmy', 'php')
         new_office_name = staff.office.name
@@ -209,7 +209,7 @@ class TestDojo(unittest.TestCase):
         fellows = self.dojo.fellows
         self.assertEqual(len(staff), 0)
         self.assertEqual(len(fellows), 0)
-        self.dojo.load_people("sample.txt")
+        self.dojo.load_people("sample")
         self.assertEqual(len(staff), 3)
         self.assertEqual(len(fellows), 4)
 
@@ -221,11 +221,7 @@ class TestDojo(unittest.TestCase):
 
     def test_invalid_format(self):
         load = self.dojo.load_people
-        file = open('invalid.txt', 'w')
+        file = open('invalid', 'w')
         file.write('SIMON PATTERSON Y FELLOW')
         res = load(file)
         self.assertEqual(res, 'Invalid format')
-
-    def test_no_file(self):
-        res = self.dojo.load_people(" ")
-        self.assertEqual(res, 'No such file or dirctory')

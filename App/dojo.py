@@ -286,4 +286,76 @@ class Dojo(object):
             % filename, bold=True, fg='green')
             return
 
+    def reallocate_person(self, name, new_room_name):
+        new_person = None
+        for people in self.all_people:
+            if people.name == name:
+                new_person = people
+
+        if new_person is None:
+            print('Person doesnt exist')
+
+            return
+
+        for r in self.all_rooms:
+            if r.name == new_room_name:
+                new_room = r
+
+        if new_room_name not in [r.name for r in self.available_rooms]:
+            print('room doesnt exist')
+            return
+
+        if new_person == 'staff':
+            
+            if new_room.room_type == 'livingspace':
+                print(' staff members cannot be allocated livingspaces')
+
+                return
+
+        for room in self.available_rooms:
+            if new_person.name in [person.name for person in room.members]:
+                if new_room == room:
+                    print('person already a member')
+                    return
+                else:
+                    room.members.remove(new_person)
+
+        new_room.members.append(new_person)
+        self.all_people.append(new_person)
+        if new_person == 'fellow':
+            self.fellows.append(new_person)
+        else:
+            self.staff.append(new_person)
+        print('you have successfully allocated')
+
+        if new_person in self.unallocated:
+            
+            self.unallocated.remove(new_person)
+
+                    
+    def load_people(self, filename):
+        '''
+        This function loads people from a text
+        file and populated the system with members
+        '''
+        if filename:
+            with open(filename + '.txt', 'r') as file:
+                # read the file content by line and go through the list
+                # of the file format
+                for line in file:
+                    data = line.split()
+                    first_name = data[0]
+                    second_name = data[1]
+                    name = first_name + ' ' + second_name
+                    category = data[2].lower()
+                    # look for person with accomodation option
+                    if len(data) == 4 :
+                        wants_accomodation = data [3]
+                    # incase there none default "N"
+                    else:
+                        wants_accomodation = 'N'
+                    self.add_person(name, category,wants_accomodation)
+                    print( 'adding')
+        else:
+            print('provide a file')
 
