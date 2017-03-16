@@ -1,11 +1,7 @@
-[run]
-omit =
-    */tests*
-    */python?.?/*
-    *site-packages/*
-    *site-packages/nose/*
-    *docopt.py*
-    *docopt*
-    *tests/    
-
 [report]
+omit=
+	*/python?.?/*
+	*/site-packages/pytest/*
+	*docopt.py*
+        *docopt*
+	*tests/*
