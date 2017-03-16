@@ -323,7 +323,7 @@ class Dojo(object):
                     click.secho('The person is already a member of room %s.' %(new_room.name),bold=True, fg='red')
                     return
                 else:
-                    # reomove person from the current room 
+                    # remove person from the current room 
                     room.members.remove(new_person)
         # add new_person to  new room
         new_room.members.append(new_person)
@@ -366,3 +366,7 @@ class Dojo(object):
         else:
             print('please provide a file')
 
+    def save_state(self,db_name):
+        pass
+    def load_state(self):
+        pass

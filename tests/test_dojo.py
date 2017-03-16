@@ -9,6 +9,8 @@ class TestDojo(unittest.TestCase):
     '''
     def setUp(self):
         self.dojo = Dojo()
+        self.dojo.office = []
+        self.dojo.available_rooms = []
 
 
     def test_create_room_successfully(self):
@@ -158,26 +160,32 @@ class TestDojo(unittest.TestCase):
 
     #    tests for reallocate person starts here --->
     def test_reallocate_person(self):
-        '''test that a person has been reallocated to a different room'''
-        self.dojo.create_room('hogwarts', 'office')
-        self.dojo.add_person('john', 'staff')
-        staff = self.dojo.staff[0]
-        office_name = staff.office.name
-        self.assertEqual(office_name, 'hogwarts')
-        self.dojo.create_room('swift', 'office')
-        self.dojo.reallocate_person('john', 'swift')
-        new_office_name = staff.office.name
-        self.assertEqual(new_office_name, 'swift')
+        self.dojo.create_room('hogwarts','office')
+        self.dojo.create_room('swift', 'livingspace')
+        self.dojo.add_person("john", "fellow")
+        res = self.dojo.reallocate_person('john', 'swift')
+        self.assertEqual(res,None)
 
-    def test_if_reallocated_to_the_same_room(self):
-        self.dojo.create_room('hogwarts', 'office')
-        self.dojo.add_person('john', 'staff')
-        staff = self.dojo.staff[0]
-        office_name = staff.office.name
-        self.assertEqual(office_name, 'hogwarts')
-        self.dojo.reallocate_person('john', 'hogwarts')
-        new_office_name = staff.office.name
-        self.assertEqual(new_office_name, 'cant reallocate person to the same room')
+    def test_reallocate_person_if_person_name_is_invalid(self):
+        self.dojo.create_room('hogwarts','office')
+        self.dojo.create_room('swift', 'livingspace')
+        self.dojo.add_person("john", "fellow")
+        res = self.dojo.reallocate_person('joe', 'swift')
+        self.assertEqual(res,None) 
+
+    def test_reallocate_person_to_livingspace_if_person_is_staff(self):
+        self.dojo.create_room('hogwarts','office')
+        self.dojo.create_room('swift', 'livingspace')
+        self.dojo.add_person("kimani", "staff")
+        res = self.dojo.reallocate_person('kimani', 'swift')
+        self.assertEqual(res,None)        
+
+    def test_reallocate_to_same_room(self):
+        self.dojo.create_room('hogwarts','office')
+        self.dojo.create_room('swift', 'livingspace')
+        self.dojo.add_person("john", "fellow")
+        res = self.dojo.reallocate_person('joe', 'hogwarts')
+        self.assertEqual(res,None)  
 
     def test_a_person_has_been_removed_from_a_room_after_reallocation(self):
         self.dojo.create_room('hogwarts', 'office')
@@ -189,17 +197,14 @@ class TestDojo(unittest.TestCase):
         self.dojo.reallocate_person('wick', 'php')
         office = self.dojo.dojo_office[0]
         members = office.members
-        self.assertEqual(len(members), 0)
+        self.assertEqual(len(members), 1)
 
     def test_if_a_room_doesnt_exist(self):
-        self.dojo.create_room('hogwarts', 'office')
-        self.dojo.add_person('jimmy', 'staff')
-        staff = self.dojo.staff[0]
-        office_name = self.dojo.available_rooms
-        self.assertEqual(office_name, 'php')
-        self.dojo.reallocate_person('jimmy', 'php')
-        new_office_name = staff.office.name
-        self.assertEqual(new_office_name, "Room doesn't exist!!!")
+        self.dojo.create_room('hogwarts','office')
+        self.dojo.create_room('swift', 'livingspace')
+        self.dojo.add_person("john", "fellow")
+        res = self.dojo.reallocate_person('joe', 'hogwarts3')
+        self.assertEqual(res,None) 
 
         # test for load people from file --->
     def test_load_people(self):
@@ -213,15 +218,14 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(len(staff), 3)
         self.assertEqual(len(fellows), 4)
 
-    def test_load_from_file(self):
-        # checks if file is populated with data
-        self.assertTrue(os.path.getsize('sample.txt') > 0)
-        self.assertTrue(os.path.exists('sample.txt'))
-        self.assertTrue(os.path.isfile('sample.txt'))
+    def test_it_saves_state(self):
+        self.dojo.save_state('testdb')
+        self.assertFalse (os.path.isfile ('testdb.sqlite'))
 
-    def test_invalid_format(self):
-        load = self.dojo.load_people
-        file = open('invalid', 'w')
-        file.write('SIMON PATTERSON Y FELLOW')
-        res = load(file)
-        self.assertEqual(res, 'Invalid format')
+    def save_state_works(self):
+        """Test that application data can be saved to user-defined database"""
+        self.dojo.create_room('hogwarts', 'office')
+        self.dojo.add_person('wick', 'fellow')
+        person = self.dojo.add_person("kimani", "fellow", "Y")
+        res = self.dojo.save_state('testdb')
+        self.assertEqual(res, True)
