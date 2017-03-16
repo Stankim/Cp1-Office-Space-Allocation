@@ -96,11 +96,7 @@ class Interactive (cmd.Cmd):
 
     @docopt_cmd
     def do_print_room(self, arg):
-        """
-        This function prints the members of a given room
-        Usage:
-            print_room [<room_name>]
-        """
+        """Usage: print_room <room_name>"""
         room_name = arg['<room_name>']
 
         dojo.print_room(room_name)

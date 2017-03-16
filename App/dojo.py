@@ -202,6 +202,10 @@ class Dojo(object):
                 click.secho('=' * 20, fg='yellow')
                 print ("    ")
                 return False
+            else:
+                click.secho('Please provide a room name',bold=True, fg='red')
+                return
+                
         # if no room is added
         else:
             click.secho('Room %s seems not to exist would you like to add it?'\
@@ -307,7 +311,7 @@ class Dojo(object):
                 # assign new variable
                 new_room = room
         # check if the room entered is in the system and vacant
-        if new_room_name not in [room.name for room in self.available_rooms]:
+        if new_room_name not in [room.name for room in self.all_rooms]:
             click.secho('The room %s does not exist.'%(new_room_name),bold=True, fg='red')
             return
         # lets not add a staff to a livingspace
