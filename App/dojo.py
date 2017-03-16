@@ -362,12 +362,12 @@ class Dojo(object):
                     # incase there none default "N"
                     else:
                         wants_accomodation = 'N'
-                    self.add_person(name, category,wants_accomodation)
+                    self.add_person(name.lower(), category,wants_accomodation)
                     click.secho('Success',fg='green')
         else:
             print('please provide a file')
 
     def save_state(self,db_name):
         pass
-    def load_state(self):
+    def load_state(self, db_name):
         pass
