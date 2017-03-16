@@ -202,9 +202,6 @@ class Dojo(object):
                 click.secho('=' * 20, fg='yellow')
                 print ("    ")
                 return False
-            else:
-                click.secho('Please provide a room name',bold=True, fg='red')
-                return
                 
         # if no room is added
         else:
