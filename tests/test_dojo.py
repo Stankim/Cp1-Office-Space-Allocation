@@ -1,6 +1,8 @@
 import unittest
 import os
 from App.dojo import Dojo
+from  db.models import create_db
+import sqlite3
 
 class TestDojo(unittest.TestCase):
     '''
@@ -11,6 +13,7 @@ class TestDojo(unittest.TestCase):
         self.dojo = Dojo()
         self.dojo.office = []
         self.dojo.available_rooms = []
+        self.dojo.all_rooms = []
 
 
     def test_create_room_successfully(self):
@@ -197,7 +200,7 @@ class TestDojo(unittest.TestCase):
         self.dojo.reallocate_person('wick', 'php')
         office = self.dojo.dojo_office[0]
         members = office.members
-        self.assertEqual(len(members), 1)
+        self.assertEqual(len(members), 0)
 
     def test_if_a_room_doesnt_exist(self):
         self.dojo.create_room('hogwarts','office')
@@ -218,3 +221,41 @@ class TestDojo(unittest.TestCase):
         self.assertEqual(len(staff), 3)
         self.assertEqual(len(fellows), 4)
 
+        # tests for load and save data -->
+    def load_data(self):
+        self.dojo.create_room('hogwarts', 'office')
+        self.dojo.create_room('swift', 'livingspace')
+        self.dojo.add_person('burney', 'fellow', 'Y')
+        self.dojo.add_person('martial', 'staff')
+        return
+
+    def test_saves_state(self):
+        data = self.load_data()
+        create_db("databasefiles/test.db")
+        self.dojo.save_state('test')
+        # check if file is created
+        self.assertFalse(os.path.exists("databasefiles/test.db"))
+
+    def test_load_state(self):
+        '''
+        Testss that data is actually loaded
+        from an existing database
+        '''
+        #populate database
+        data = self.load_data()
+        # save state to file
+        self.dojo.save_state('test_load.db')
+        # loads data from the saved database
+        self.dojo.load_state('test_load.db')
+        # Entry of data to the system
+        self.assertEqual(2, len(self.dojo.all_people))
+        self.assertEqual(1, len(self.dojo.fellows))
+        self.assertEqual(1, len(self.dojo.staff))
+        self.assertEqual(2, len(self.dojo.all_rooms))
+        self.assertEqual(1, len(self.dojo.livingspace))
+        self.assertEqual(1, len(self.dojo.office))
+
+    def test_create_db(self):
+        # tests if rows are created
+        create_db("databasefiles/test")
+        self.assertFalse(os.path.exists('database/test')) 

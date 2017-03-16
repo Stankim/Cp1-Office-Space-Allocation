@@ -13,6 +13,9 @@ import click
 
 from  App.person import Fellow, Staff
 from  App.rooms import Livingspace, Office
+from  db.models import Persons, Rooms, create_db, Base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 class Dojo(object):
     '''
