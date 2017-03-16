@@ -287,49 +287,56 @@ class Dojo(object):
             return
 
     def reallocate_person(self, name, new_room_name):
+        '''
+        This function reallocates a person to another
+        room be it an office or a fellow to a livingspace
+        '''
+        rooms = self.all_rooms
         new_person = None
+        # go through the list of all people and check if person exist
         for people in self.all_people:
             if people.name == name:
                 new_person = people
-
+        # if person to reallocate is not in the system
         if new_person is None:
-            print('Person doesnt exist')
-
+            click.secho('The person name entered does not exist.' ,bold=True, fg='red')
             return
-
-        for r in self.all_rooms:
-            if r.name == new_room_name:
-                new_room = r
-
-        if new_room_name not in [r.name for r in self.available_rooms]:
-            print('room doesnt exist')
+        # go through a list of all rooms
+        for room in rooms:
+            if room.name == new_room_name:
+                # assign new variable
+                new_room = room
+        # check if the room entered is in the system and vacant
+        if new_room_name not in [room.name for room in self.available_rooms]:
+            click.secho('The room %s does not exist.'%(new_room_name),bold=True, fg='red')
             return
-
-        if new_person == 'staff':
-            
-            if new_room.room_type == 'livingspace':
-                print(' staff members cannot be allocated livingspaces')
-
+        # lets not add a staff to a livingspace
+        # check new_person in staff list
+        if new_person in self.staff and new_room in self.livingspace:
+                click.secho("Staff members can't be allocated livingspaces." ,bold=True, fg='red')
                 return
-
+        # checks if person added actually has been alloacted a room
         for room in self.available_rooms:
             if new_person.name in [person.name for person in room.members]:
                 if new_room == room:
-                    print('person already a member')
+                    # lets not allocate new_person to the same room
+                    click.secho('The person is already a member of room %s.' %(new_room.name),bold=True, fg='red')
                     return
                 else:
+                    # reomove person from the current room 
                     room.members.remove(new_person)
-
+        # add new_person to  new room
         new_room.members.append(new_person)
+        # add person to all_people list
         self.all_people.append(new_person)
-        if new_person == 'fellow':
+        # if person is fellow add to fellows list
+        if new_person == 'Fellow':
             self.fellows.append(new_person)
         else:
             self.staff.append(new_person)
-        print('you have successfully allocated')
-
+        click.secho('%s has been reallocated to %s' %(new_person.name, new_room.name),bold=True, fg='green')
+        # reallocate members who dont have allocations to vacant rooms
         if new_person in self.unallocated:
-            
             self.unallocated.remove(new_person)
 
                     
@@ -355,7 +362,7 @@ class Dojo(object):
                     else:
                         wants_accomodation = 'N'
                     self.add_person(name, category,wants_accomodation)
-                    print( 'adding')
+                    click.secho('Success',fg='green')
         else:
-            print('provide a file')
+            print('please provide a file')
 
