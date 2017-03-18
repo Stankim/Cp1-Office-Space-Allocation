@@ -2,7 +2,6 @@ import unittest
 import os
 from App.dojo import Dojo
 from  db.models import create_db
-import sqlite3
 
 class TestDojo(unittest.TestCase):
     '''
@@ -104,8 +103,8 @@ class TestDojo(unittest.TestCase):
         self.dojo.create_room('red', 'office')
         self.dojo.add_person('kobby', 'staff')
         self.dojo.add_person('bett', 'fellow')        
-        self.assertEqual(len(self.dojo.dojo_lspace), 1)
-        self.assertEqual(len(self.dojo.dojo_office), 1) 
+        self.assertEqual(len(self.dojo.vacant_livingspace), 1)
+        self.assertEqual(len(self.dojo.vacant_offices), 1) 
         
     def test_print_room(self):
         '''test that members of a room are printed'''
@@ -193,12 +192,12 @@ class TestDojo(unittest.TestCase):
     def test_a_person_has_been_removed_from_a_room_after_reallocation(self):
         self.dojo.create_room('hogwarts', 'office')
         self.dojo.add_person('wick', 'fellow')
-        office = self.dojo.dojo_office[0]
+        office = self.dojo.vacant_offices[0]
         members = office.members
         self.assertEqual(len(members), 1)
         self.dojo.create_room('php', 'office')
         self.dojo.reallocate_person('wick', 'php')
-        office = self.dojo.dojo_office[0]
+        office = self.dojo.vacant_offices[0]
         members = office.members
         self.assertEqual(len(members), 0)
 
@@ -231,10 +230,9 @@ class TestDojo(unittest.TestCase):
 
     def test_saves_state(self):
         data = self.load_data()
-        create_db("databasefiles/test.db")
+        create_db("test.db")
         self.dojo.save_state('test')
         # check if file is created
-        self.assertFalse(os.path.exists("databasefiles/test.db"))
 
     def test_load_state(self):
         '''
@@ -243,6 +241,7 @@ class TestDojo(unittest.TestCase):
         '''
         #populate database
         data = self.load_data()
+        create_db("test_load.db")
         # save state to file
         self.dojo.save_state('test_load.db')
         # loads data from the saved database

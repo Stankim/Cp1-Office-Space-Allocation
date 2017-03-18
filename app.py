@@ -7,12 +7,12 @@ Usage:
     dojo (-i | --interactive)
     dojo (-h | --help | --version)
     dojo create_room <room_name> (livingspace|Office)...
-    dojo add_person <fname> <lname> (fellow|staff) [<accommodation>]
+    dojo add_person <fname> <lname> (fellow|staff) [<accomodation>]
     dojo print_room <room_name>
 
 Options:
     -i, --interactive  Interactive Mode
-    -h, --help  Show this screen and exit.
+    -h, --help  Show this screen.
     --baud=<n>  Baudrate [default: 9600]
 """
 
@@ -59,6 +59,8 @@ def docopt_cmd(func):
 
 def start():
     intro_dojo()
+    arguments = __doc__
+    print(arguments)
 
 
 class Interactive (cmd.Cmd):
@@ -145,6 +147,35 @@ class Interactive (cmd.Cmd):
         name = arg['<first_name>'] + " " + arg["<last_name>"]
         new_room_name = arg['<new_room_name>']
         dojo.reallocate_person(name, new_room_name)
+
+    @docopt_cmd
+    def do_save_state(self, arg):
+        """Usage: save_state [<database_name>]"""
+
+        db_name = arg['<database_name>']
+        if db_name:
+            dojo.save_state(db_name)
+        else:
+            dojo.save_state('dojo')
+
+
+   	@docopt_cmd
+	def do_load_state(self, arg):
+
+		"""
+		Loads data from the specified db into the app.
+		Usage: load_state <filename>
+		"""
+		dojo.load_state(arg["<filename>"])
+
+    @docopt_cmd
+    def do_load_state(self, arg):
+        """Usage: load_state <database_name> 
+
+        """
+
+        db_name = str(arg['<database_name>'])
+        dojo.load_state(db_name)
 
 
     def do_quit(self, arg):

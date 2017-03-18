@@ -1,6 +1,8 @@
+
 """
 File      : dojo.py
 Date      : March, 2017
+Client    : Andela 21
 Author(s) : Jimmy Kimani <jimmykkimani@gmail.com>
 Desc      : Office Allocator model module
 """
@@ -16,6 +18,9 @@ from  App.rooms import Livingspace, Office
 from  db.models import Persons, Rooms, create_db, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import text, select
+import os.path
+
 
 class Dojo(object):
     '''
@@ -31,9 +36,9 @@ class Dojo(object):
         self.office = []
         self.livingspace = []
         self.all_people = []
-        self.available_rooms = []
-        self.dojo_office = []
-        self.dojo_lspace = []
+        self.vacant_rooms = []
+        self.vacant_offices = []
+        self.vacant_livingspace = []
         self.unallocated = []
     def create_room(self, name, type_room):
         '''
@@ -41,6 +46,7 @@ class Dojo(object):
         type_room and instantiates the rooms.
         '''
         print ('    ')
+
         room_names = [room.name for room in self.all_rooms]
         msg = ''
         if name in room_names:
@@ -50,7 +56,8 @@ class Dojo(object):
             print ('   ')
         else:
             '''Create new Livingspace for person(s)'''
-            if type_room.lower() == 'livingspace':
+            if type_room == 'livingspace':
+                room_type = 'LivingSpace'
                 new_room = Livingspace(name)
                 self.livingspace.append(new_room)
                 self.all_rooms.append(new_room)
@@ -59,7 +66,8 @@ class Dojo(object):
                 click.secho(msg, bold=True, fg='yellow')
                 print ("    ")
 
-            elif type_room.lower() == 'office':
+            elif type_room == 'office':
+                room_type = 'Office'
                 new_room = Office(name)
                 self.office.append(new_room)
                 self.all_rooms.append(new_room)
@@ -81,23 +89,23 @@ class Dojo(object):
         lspace = self.livingspace
         for office in ofisi:
             if len(office.members) < office.capacity:
-                if office not in self.dojo_office:
-                    self.dojo_office.append(office)
-                    self.available_rooms.append(office)
+                if office not in self.vacant_offices:
+                    self.vacant_offices.append(office)
+                    self.vacant_rooms.append(office)
             elif len(office.members) >= office.capacity:
-                if office in self.dojo_office:
-                    self.dojo_office.remove(office)
-                    self.available_rooms.remove(office)
+                if office in self.vacant_offices:
+                    self.vacant_offices.remove(office)
+                    self.vacant_rooms.remove(office)
                     # checks vacant rooms and add to a list
         for livingspace in lspace:
             if len(livingspace.members) < livingspace.capacity:
-                if livingspace not in self.dojo_lspace:
-                    self.dojo_lspace.append(livingspace)
-                    self.available_rooms.append(livingspace)     
+                if livingspace not in self.vacant_livingspace:
+                    self.vacant_livingspace.append(livingspace)
+                    self.vacant_rooms.append(livingspace)     
             elif len(livingspace.members) >= livingspace.capacity:
-                if livingspace in self.dojo_lspace:
-                    self.dojo_lspace.remove(livingspace)
-                    self.available_rooms.remove(livingspace)
+                if livingspace in self.vacant_livingspace:
+                    self.vacant_livingspace.remove(livingspace)
+                    self.vacant_rooms.remove(livingspace)
 
     def add_person(self, name, category, wants_accomodation='N'):
         '''
@@ -122,21 +130,25 @@ class Dojo(object):
                 self.all_people.append(new_person)
                 self.check_room_is_vacant()
                 if self.office or self.livingspace:
-                    if not self.dojo_office:
+                    if not self.vacant_offices:
                         self.unallocated.append(new_person)
                         msg = 'There are no offices or the offices are all full.'
                         click.secho(msg,bold=True, fg='red')
                     else:
-                        o_choice = random.choice(self.dojo_office)
-                        o_choice.members.append(new_person)
+                        randomized_office = random.choice(self.vacant_offices)
+                        # assign an office to fellow
+                        new_person.office= randomized_office
+                        # populate members list with new person(s)
+                        randomized_office.members.append(new_person)
+
                         msg = 'Fellow %s has been successfully added ! \n%s has been allocated to :\
                             \nOffice: %s ' \
                             %(new_person.name.capitalize(),new_person.name.capitalize(),\
-                            o_choice.name.capitalize())
+                            randomized_office.name.capitalize())
                         click.secho(msg,bold=False, fg='cyan')
                     if wants_accomodation == 'Y':
                         self.check_room_is_vacant()
-                        if not self.dojo_lspace:
+                        if not self.vacant_livingspace:
                             self.unallocated.append(new_person)
                             msg = 'There are no Livingspace found or the Livingspaces are all full.'
                             click.secho(msg,bold=True, fg='red')
@@ -144,9 +156,10 @@ class Dojo(object):
                             click.secho('ALLOCATING LIVINGSPACE ...', fg='magenta')
                             time.sleep(1.1)
                             print ('    ')
-                            l_choice = random.choice(self.dojo_lspace)
-                            l_choice.members.append(new_person)
-                            msg = 'Livingspace: %s' %(l_choice.name.capitalize())
+                            randomized_lspace = random.choice(self.vacant_livingspace)
+                            new_person.livingspace = randomized_lspace
+                            randomized_lspace.members.append(new_person)
+                            msg = 'Livingspace: %s' %(randomized_lspace.name.capitalize())
                             click.secho(msg,bold=False, fg='cyan')
                 else:
                     self.unallocated.append(new_person)
@@ -160,17 +173,18 @@ class Dojo(object):
                 self.all_people.append(new_person)
                 if self.office:
                     self.check_room_is_vacant()
-                    if not self.dojo_office:
+                    if not self.vacant_offices:
                         self.unallocated.append(new_person)
                         msg = 'One of the  Offices reached its maximum please add another office!'
                         click.secho(msg,bold=True, fg='red')
                     else:
-                        o_choice = random.choice(self.dojo_office)
-                        o_choice.members.append(new_person)
+                        randomized_office = random.choice(self.vacant_offices)
+                        new_person.office= randomized_office
+                        randomized_office.members.append(new_person)
                         msg = 'Staff %s has been successfully added ! \n%s has been allocated to :\
                             \nOffice: %s ' \
                             %(new_person.name.capitalize(),new_person.name.capitalize(),\
-                            o_choice.name.capitalize())
+                            randomized_office.name.capitalize())
                         click.secho(msg,bold=False, fg='cyan')
                 else:
                     self.unallocated.append(new_person)
@@ -229,14 +243,14 @@ class Dojo(object):
         for room in rooms:
             output += '=' * 25
             output += '\n'
-            output += room.name.upper()
+            output += room.name.upper() + "  "'|' ' '+ room.room_type
             output += '\n'
             output += '=' * 25
             output += '\n'
             # go through all members added
             if room.members:
                 for member in room.members:
-                    output += member.name.capitalize()
+                    output += member.name.capitalize()+ " "'(' + member.person_type+ ')'
                     output += '\n'
             else:
                 # prints out a created room with no members
@@ -245,7 +259,7 @@ class Dojo(object):
         # This prints a list of all allocations onto the screen without the
         # optional --o
         if filename == None:
-            click.secho(output, fg='blue')
+            click.secho(output, fg='yellow')
 
         else:
             # prints the list of allocations to a specified file(.txt)
@@ -314,13 +328,16 @@ class Dojo(object):
         if new_room_name not in [room.name for room in self.all_rooms]:
             click.secho('The room %s does not exist.'%(new_room_name),bold=True, fg='red')
             return
+        if new_person.wants_accomodation == 'N' and new_room in self.livingspace:
+                click.secho("without accomodation you can't be allocated livingspaces." ,bold=True, fg='red')
+                return
         # lets not add a staff to a livingspace
         # check new_person in staff list
         if new_person in self.staff and new_room in self.livingspace:
                 click.secho("Staff members can't be allocated livingspaces." ,bold=True, fg='red')
                 return
         # checks if person added actually has been alloacted a room
-        for room in self.available_rooms:
+        for room in self.vacant_rooms:
             if new_person.name in [person.name for person in room.members]:
                 if new_room == room:
                     # lets not allocate new_person to the same room
@@ -369,8 +386,149 @@ class Dojo(object):
                     click.secho('Success',fg='green')
         else:
             print('please provide a file')
+                 
+    def save_state(self,db_name='dojo'):
+        '''
+        Persists all the data stored in the app to a 
+        SQLite database. Specifying the --db parameter
+        explicitly stores the data in the sqlite_database 
+        specified. 
+        '''
+        # create engine
+        engine = create_db(db_name)
+        # connect to db
+        Base.metadata.bind = engine
+        Session = sessionmaker()
+        session = Session()
 
-    def save_state(self,db_name):
-        pass
+        # function to select all rooms in the Rooms table
+        items = select([Rooms])
+        res = session.execute(items)
+        db_room_list =[item.room.name for item in res]
+
+        for room in self.all_rooms:
+            if room.name not in db_room_list:
+                new_room = Rooms(name=room.name,
+                                type_room = room.room_type,room_capacity = room.capacity)
+                session.add(new_room)
+                session.commit()
+
+        people = select([Persons])
+        response = session.execute(people)
+        dbpersons_list = [item.person.name for item in response]
+        # go through all people in all people list
+        for person in self.all_people:
+            if person.name not in dbpersons_list:
+                # get the neccessary office names from objects
+                if person.office is None:
+                    # If fellow or staff have no offices allocated
+                    people.office = 'has no office'
+                else:
+                  office_allocated = person.office.name
+                #    If fellows have no livingspaces allocated
+                if person.livingspace is None:
+                    livingspace_allocated = "no room"
+                else:
+                  livingspace_allocated= person.livingspace.name
+                accomodation = person.wants_accomodation
+                new_p = Persons(
+                    name=person.name,
+                    category=person.person_type,
+                    wants_accomodation= accomodation,
+                    office_allocated= office_allocated,
+                    living_space_allocated= livingspace_allocated)
+                # add new person to db
+                session.add(new_p)
+                session.commit()
+                message = "Data added to {} database successfully"
+                click.secho(message, fg='green', bold=True)   
+
     def load_state(self, db_name):
-        pass
+        '''
+         This function loads data from a database into the application.
+        '''
+        if not os.path.isfile(db_name):
+            print("Database does not exist")
+        else:    
+            # create engine
+            engine = create_engine('sqlite:///' + db_name)
+            # Bind engine to Base Metadata
+            Base.metadata.bind = engine
+            # creates session
+            Session = sessionmaker(bind=engine)
+            session = Session()
+            # Rooms --->
+            # gets all the rooms in Rooms
+            items = select([Rooms])
+            # create an instance of the Rooms class where data is loaded
+            res = session.execute(items)
+            # queries all the result to enable tabulation of data
+            for item in res.fetchall():
+                # assign new variables
+                r_name = item.name
+                r_type = item.type_room
+
+                if r_type == 'Office':
+                    # check if there are no rooms in the sysytem and create one
+                    if len(self.vacant_offices) == 0:
+                        # pass room name and room type from db as arguments to create a new room
+                        self.create_room(r_name, r_type.lower())
+                    else:
+                        for room in self.office:
+                            if not self.vacant_offices:
+                                self.create_room(r_name, r_type.lower())
+                else:
+                    if len(self.vacant_livingspace) == 0:
+                         self.create_room(r_name, r_type.lower())
+                    else:
+                        for room in self.livingspace:
+                            if not self.vacant_livingspace:
+                                 self.create_room(r_name, r_type.lower())
+            session.close()
+            # Persons --->
+            # get all the persons(s) in Persons
+            items = select([Persons])
+            result = session.execute(items)
+            # query all results
+            for item in result.fetchall():
+                data = item.name.split()
+                first_name = data[0]
+                second_name = data[1]
+                role = item.category
+                person = first_name + ' ' + second_name 
+                office_allocated = item.office_allocated
+                livingspace_allocated = item.living_space_allocated
+
+                if role == 'Staff':
+                    new_person = Staff(person)
+                    for room in self.all_rooms:
+                         # check if room is == rooms created
+                        # Populate the allocations variable with appropriate data from db
+                        if office_allocated == room.name:
+                            # along with members
+                            room.members.append(new_person)
+                            break
+                elif role == 'Fellow':
+                    new_person= Fellow(person)
+                    for room in self.all_rooms:
+                        # populate dojo rooms with all offices in the db
+                        if office_allocated == room.name:
+                            # as well as members allocations
+                            room.members.append(new_person)
+                            break
+                    for room in self.livingspace:
+                        if room.name == livingspace_allocated:
+                            room.members.append(new_person)
+                if role == 'Staff':
+                    person_obj = Staff(person)
+                    self.staff.append(person_obj)
+                    self.all_people.append(person_obj)
+                elif role == 'Fellow':
+                    person_obj = Fellow(person)
+                    self.fellows.append(person_obj)
+                    self.all_people.append(person_obj)
+            print('Load successful!')    
+
+        
+
+                    

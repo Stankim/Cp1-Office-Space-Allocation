@@ -21,6 +21,10 @@ class Room(object):
         self.capacity = self.capacity -1
         return self.capacity
 
+    @property
+    def room_type(self):
+        return self.__class__.__name__
+
 class Office(Room):
 
     '''

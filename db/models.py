@@ -27,10 +27,9 @@ class Persons(Base):
 
     def __repr__(self):
         return '<Person (name=%s)>' % self.name
-    
+
+
 def create_db(db_name):
-    db_name = db_name + '.sqlite'
     engine = create_engine('sqlite:///' + db_name)
-    session = sessionmaker()
-    session.configure(bind=engine)
     Base.metadata.create_all(engine)
+    return engine
