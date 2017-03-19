@@ -315,7 +315,7 @@ Leigh riley (Staff)
 ```
 ### Tests.
 
-To run nosetests ensure that you are within the *virtual environment* and have the following installed:
+To run Pytest ensure that you are within the *virtual environment* and have the following installed:
 
 1. *Pytest*
 
