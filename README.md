@@ -3,6 +3,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)]()
 [![PyPI](https://img.shields.io/pypi/pyversions/Django.svg?style=flat-square)]()
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+[![Jimmy Kimani](https://img.shields.io/badge/JImmy%20Kimani-Andela21-green.svg)]()
 
 # THE DOJO OFFICE SPACE AllOCATION SYSYTEM
 
