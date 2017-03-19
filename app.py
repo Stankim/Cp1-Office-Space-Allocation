@@ -159,14 +159,14 @@ class Interactive (cmd.Cmd):
             dojo.save_state('dojo')
 
 
-   	@docopt_cmd
-	def do_load_state(self, arg):
+   	# @docopt_cmd
+	# def do_load_state(self, arg):
 
-		"""
-		Loads data from the specified db into the app.
-		Usage: load_state <filename>
-		"""
-		dojo.load_state(arg["<filename>"])
+	# 	"""
+	# 	Loads data from the specified db into the app.
+	# 	Usage: load_state <filename>
+	# 	"""
+	# 	dojo.load_state(arg["<filename>"])
 
     @docopt_cmd
     def do_load_state(self, arg):
