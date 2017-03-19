@@ -55,10 +55,10 @@ print_room | (room_name) | print_room Hogwarts
 save_state | [--db=sqlite_database]| save_state Dojo
 load_state |(sqlite_database)|load_state Dojo
 
-Usage The following screencast shows how to run the different commands. Check it out:
-[![asciicast](https://asciinema.org/a/b870juwbzni440hsa4tkzxfj0.png)](https://asciinema.org/a/b870juwbzni440hsa4tkzxfj0)
+The following screencast shows how to run the different commands. Check it out:
+[![asciicast](https://asciinema.org/a/b870juwbzni440hsa4tkzxfj0.png)](https://asciinema.org/a/b870juwbzni440hsa4tkzxfj0?speed=2)
 
-## Usage
+## 3 Usage
 
 Launch the app in interactive mode:
 ```
