@@ -313,6 +313,28 @@ Dominic walters (Staff)
 Leigh riley (Staff)
 
 ```
+### Tests.
+
+To run nosetests ensure that you are within the *virtual environment* and have the following installed:
+
+1. *Pytest*
+
+2. *coveralls*
+
+
+After that make sure you within the ** Office allocation  folder** run :
+```
+jimkaks@jimmy:~/Desktop/Office-Space-Allocation$ python -m pytest
+===================================================================================================== test session starts ======================================================================================================
+platform linux2 -- Python 2.7.12, pytest-3.0.6, py-1.4.32, pluggy-0.4.0
+rootdir: /home/jimkaks/Desktop/Office-Space-Allocation, inifile: 
+collected 25 items 
+
+tests/test_dojo.py .........................
+
+================================================================================================== 25 passed in 2.88 seconds ==================================================================================================
+jimkaks@jimmy:~/Desktop/Office-Space-Allocation$ 
+```
 ## Credits
 
 1. [Jimmy Kimani](https://github.com/jimmykimani)

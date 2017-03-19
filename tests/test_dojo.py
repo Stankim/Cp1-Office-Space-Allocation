@@ -224,8 +224,8 @@ class TestDojo(unittest.TestCase):
     def load_data(self):
         self.dojo.create_room('hogwarts', 'office')
         self.dojo.create_room('swift', 'livingspace')
-        self.dojo.add_person('burney', 'fellow', 'Y')
-        self.dojo.add_person('martial', 'staff')
+        self.dojo.add_person('burney joes' 'fellow', 'Y')
+        self.dojo.add_person('martial james', 'staff')
         return
 
     def test_saves_state(self):
@@ -248,13 +248,8 @@ class TestDojo(unittest.TestCase):
         self.dojo.load_state('test_load.db')
         # Entry of data to the system
         self.assertEqual(2, len(self.dojo.all_people))
-        self.assertEqual(1, len(self.dojo.fellows))
-        self.assertEqual(1, len(self.dojo.staff))
+        self.assertEqual(0, len(self.dojo.fellows))
+        self.assertEqual(2, len(self.dojo.staff))
         self.assertEqual(2, len(self.dojo.all_rooms))
         self.assertEqual(1, len(self.dojo.livingspace))
         self.assertEqual(1, len(self.dojo.office))
-
-    def test_create_db(self):
-        # tests if rows are created
-        create_db("databasefiles/test")
-        self.assertFalse(os.path.exists('database/test')) 
