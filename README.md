@@ -15,7 +15,7 @@ A room can be allocated **ONLY** to a staff or a fellow at Andela. Staff cannot 
  Fellows have a choice to choose a living space or not.
 
 
-##1 Installation
+## 1 Installation
 
 Clone this repo:
 ```
@@ -40,8 +40,7 @@ Run the app
 $ `python app.py --i`
 ```
 
-
-##2 Commands.
+## 2 Commands
 
 Command | Argument | Example
 --- | --- | ---
