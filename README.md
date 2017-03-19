@@ -1,7 +1,8 @@
 [![Build Status](https://travis-ci.org/jimmykimani/Office-Space-Allocation.svg?branch=master)](https://travis-ci.org/jimmykimani/Office-Space-Allocation)
 [![Waffle.io](https://img.shields.io/waffle/label/evancohen/smart-mirror/in%20progress.svg?style=flat-square)]()
+[![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)]()
 [![PyPI](https://img.shields.io/pypi/pyversions/Django.svg?style=flat-square)]()
-[![Coverage Status](https://coveralls.io/repos/github/jimmykimani/Office-Space-Allocation/badge.svg?branch=master)](https://coveralls.io/github/jimmykimani/Office-Space-Allocation?branch=develop)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 
 # THE DOJO OFFICE SPACE AllOCATION SYSYTEM
 
@@ -54,7 +55,264 @@ print_room | (room_name) | print_room Hogwarts
 save_state | [--db=sqlite_database]| save_state Dojo
 load_state |(sqlite_database)|load_state Dojo
 
+Usage The following screencast shows how to run the different commands. Check it out:
+[![asciicast](https://asciinema.org/a/b870juwbzni440hsa4tkzxfj0.png)](https://asciinema.org/a/b870juwbzni440hsa4tkzxfj0)
 
+## Usage
+
+Launch the app in interactive mode:
+```
+$ python app.py -i
+===========================================================================
+   
+oooooooooo.                 o8o           
+`888'   `Y8b                `"'           
+ 888      888  .ooooo.     oooo  .ooooo.  
+ 888      888 d88' `88b    `888 d88' `88b 
+ 888      888 888   888     888 888   888 
+ 888     d88' 888   888     888 888   888 
+o888bood8P'   `Y8bod8P'     888 `Y8bod8P' 
+                            888           
+                        .o. 88P           
+                        `Y888P            
+
+===========================================================================
+   
+Welcome to the Dojo office allocation! (type help for a list of commands.)
+   
+```
+### Create Room
+```
+create_room <room_name> <room_type>
+```
+This command creates rooms in The Dojo
+You can create  rooms by specifying room names
+after the create_room command. By default, this method will create an
+Office/Livingspace into the system.
+
+```
+The Dojo > create_room hogwarts office
+    
+ An office called Hogwarts has been successfully created!
+    
+The Dojo > create_room swift livingspace
+    
+ A Livingspace called Swift has been successfully created!
+
+```
+
+### Add Person
+```
+dd_person <first_name> <last_name> <role> [<accomodation(Y/N)>]
+```
+This command adds a person and allocates them a random room in The Dojo
+
+The <role> argument specifies the role of the person being added
+which can either be 'Fellow' or 'Staff'.
+
+The <wants_accommodation> Here is an option argument which can
+be either Y or N. The default value if not provided is N
+
+
+Adding a Fellow with accomodation option:
+```
+The Dojo > add_person john doe fellow Y
+ADDING JOHN DOE  ...
+    
+Fellow John doe has been successfully added ! 
+John doe has been allocated to :
+Office: Hogwarts 
+ALLOCATING LIVINGSPACE ...
+    
+Livingspace: Swift
+
+```
+Adding a Staff:
+```
+The Dojo > add_person matial carter staff
+ADDING MATIAL CARTER  ...
+    
+Staff Matial carter has been successfully added ! 
+Matial carter has been allocated to :
+Office: Hogwarts 
+
+```
+### Print Room
+```
+print_room <room_name>
+```
+This commands prints room details.
+
+It accepts a room name then querries System and returns
+information about the room given.
+given.
+```
+The Dojo > print_room hogwarts
+PRINTING ROOM HOGWARTS  ...
+ 
+====================
+Hogwarts 
+====================
+John doe
+Matial carter
+Oluwafemi sule
+Dominic walters
+Simon patterson
+Mari lawrence
+====================
+    
+The Dojo > 
+
+```
+
+### Print Allocations
+```
+print_allocations [--o=FILENAME]
+```
+This commands prints a list of allocations to the screen specifying
+the optional --o 
+
+It simply takes the name of the file to save the allocations printout
+If not provided, the printout will not be saved to a file.
+
+All allocations files are saved in the root directory.
+```
+The Dojo > print_allocations
+PRINTING ALLOCATIONS...
+ 
+=========================
+HOGWARTS  | Office
+=========================
+John doe (Fellow)
+Matial carter (Staff)
+Oluwafemi sule (Fellow)
+Dominic walters (Staff)
+Simon patterson (Fellow)
+Mari lawrence (Fellow)
+=========================
+SWIFT  | Livingspace
+=========================
+John doe (Fellow)
+Oluwafemi sule (Fellow)
+Simon patterson (Fellow)
+Mari lawrence (Fellow)
+
+```
+### Print unallocated
+```
+print_unallocated [--o=FILENAME]
+```
+This commands prints a list of unallocated  to the screen specifying
+the optional --o 
+
+It simply takes the name of the file to save the unallocated printout
+If not provided, the printout will not be saved to a file.
+
+All allocations files are saved in the root directory.
+
+```
+The Dojo > print_unallocated
+====================
+Unallocated People
+====================
+Leigh riley
+Tana lopez
+Tana lopez
+Kelly Mcguire
+
+```
+### Reallocate Person
+```
+reallocate_person <first_name> <last_name> <new_room_name>
+```
+
+This command reallocates a person to another room.
+
+It takes thes person's name which can be gotten from the list of
+allocations in a particular room when print_allocations is run
+
+The it takes is the name of the room to which you want
+to allocate the person to.
+
+Note: The argument <new_room_name> is case sensitive.
+```
+The Dojo > reallocate_person john doe hogwarts
+john doe has been reallocated to hogwarts
+The Dojo > print_allocations
+PRINTING ALLOCATIONS...
+ 
+=========================
+HOGWARTS  | Office
+=========================
+John doe (Fellow)
+=========================
+CAMELOT  | Office
+=========================
+There are no people yet.
+
+```
+### Save State
+```
+save_state [<database_name>]
+```
+This command persists the current state of the system to an SQLite
+Database.
+
+It takes an option '<database_name>' which specifies the name to give the
+database file which we will use to save the state of the applicaion.
+If no DB name is given, the state is saved in a file named 'Dojo'
+
+Note: All DB files are saved in the root directory.
+
+```
+The Dojo > save_state
+Data added to dojo database successfully
+
+```
+### Load State
+```
+load_state [<database_name>]
+```
+This command loads a previously saved state from an SQLite database to
+the System.
+
+It takes an argument, <sqlite_database> which specifies the name of the
+SQLite database file to load the state from.
+
+NB: All DB files are loaded from the root directory.
+
+```
+The Dojo > load_state
+Database does not exist
+The Dojo > load_state dojo
+    
+ An office called Hogs has been successfully created!
+    
+    
+ An office called Swift has been successfully created!
+    
+    
+ An office called Camelot has been successfully created!
+    
+Load successful!
+The Dojo > print_allocations
+PRINTING ALLOCATIONS...
+ 
+=========================
+HOGS  | Office
+=========================
+There are no people yet.
+=========================
+SWIFT  | Office
+=========================
+Kelly mcguire (Staff)
+=========================
+CAMELOT  | Office
+=========================
+Dominic walters (Staff)
+Leigh riley (Staff)
+
+```
 ## Credits
 
 1. [Jimmy Kimani](https://github.com/jimmykimani)

@@ -337,15 +337,17 @@ class Dojo(object):
                 if new_room == room:
                     # lets not allocate new_person to the same room
                     click.secho('The person is already a member of room %s.' %(new_room.name),bold=True, fg='red')
-        for room in self.vacant_offices:
-             if new_person.name in [person.name for person in room.members]:
-                 for r in self.vacant_livingspace:
-                     if new_room == r:
-                         click.secho("Cannot reallocate from office to livingspace or vice versa" ,bold=True, fg='red')
-                         return
-        else:
-            # remove person from the current room 
-            room.members.remove(new_person)
+                    return
+                else:
+                    room.members.remove(new_person)
+        # for room in self.vacant_offices:
+        #     if new_person.name in [person.name for person in room.members]:
+        #         for r in self.vacant_livingspace:
+        #             if new_room == r:
+        #                  click.secho("Cannot reallocate from office to livingspace or vice versa" ,bold=True, fg='red')
+        #             else:
+        #                 room.members.remove(new_person)
+        
         # add new_person to  new room
         new_room.members.append(new_person)
         # add person to all_people list
