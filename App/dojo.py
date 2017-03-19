@@ -438,8 +438,10 @@ class Dojo(object):
                     accomodation = person.wants_accomodation
                 for p in self.unallocated:
                     if person == p:
-                        office_allocated = 'Unallocated'
-                        livingspace_allocated = 'Unalloacted'
+                        if p.office is None:
+                            office_allocated = 'Unallocated'
+                        elif p.livingspace is None:
+                            livingspace_allocated = 'Unallocated'
                 new_p = Persons(
                     name=person.name,
                     category=person.person_type,
@@ -508,6 +510,7 @@ class Dojo(object):
                 person = first_name + ' ' + second_name 
                 office_allocated = item.office_allocated
                 livingspace_allocated = item.living_space_allocated
+                
 
                 if role == 'Staff':
                     new_person = Staff(person)
@@ -517,6 +520,8 @@ class Dojo(object):
                         if office_allocated == room.name:
                             # along with members
                             room.members.append(new_person)
+                        elif office_allocated == 'Unallocated':
+                            self.unallocated.append(new_person)
                             break
                 elif role == 'Fellow':
                     new_person= Fellow(person)
@@ -525,10 +530,16 @@ class Dojo(object):
                         if office_allocated == room.name:
                             # as well as members allocations
                             room.members.append(new_person)
+                        elif office_allocated == 'Unallocated':
+                            self.unallocated.append(new_person)                            
                             break
                     for room in self.livingspace:
                         if room.name == livingspace_allocated:
                             room.members.append(new_person)
+                        elif livingspace_allocated == 'Unallocated':
+                            self.unallocated.append(new_person) 
+
+
                 if role == 'Staff':
                     person_obj = Staff(person)
                     self.staff.append(person_obj)
@@ -537,6 +548,13 @@ class Dojo(object):
                     person_obj = Fellow(person)
                     self.fellows.append(person_obj)
                     self.all_people.append(person_obj)
+
+                # if role == 'Fellow':
+                #     p = Fellow(person)
+                #     if office_allocated == 'Unallocated':
+                #         self.unallocated.append(p)
+                # if office_allocated == 'Unallocated':
+                    
             print('Load successful!')    
 
         
