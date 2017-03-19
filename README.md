@@ -34,9 +34,11 @@ Install the required packages:
 ```
 $ pip install -r requirements.txt 
 
+```
 Run the app
 ```
 $ `python app.py --i`
+```
 
 
 ##2 Commands.
