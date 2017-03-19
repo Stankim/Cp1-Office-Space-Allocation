@@ -107,7 +107,7 @@ class Dojo(object):
                     self.vacant_livingspace.remove(livingspace)
                     self.vacant_rooms.remove(livingspace)
 
-    def add_person(self, name, category, wants_accomodation):
+    def add_person(self, name, category, wants_accomodation="N"):
         '''
         This function creates a person and allocates
         the person to a random room
