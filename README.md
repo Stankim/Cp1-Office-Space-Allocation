@@ -15,7 +15,7 @@ A room can be allocated **ONLY** to a staff or a fellow at Andela. Staff cannot 
  Fellows have a choice to choose a living space or not.
 
 
-#1 Installation
+##1 Installation
 
 Clone this repo:
 ```
@@ -39,7 +39,7 @@ Run the app
 $ `python app.py --i`
 
 
-#2. Commands.
+##2 Commands.
 
 Command | Argument | Example
 --- | --- | ---
@@ -60,14 +60,14 @@ load_state |(sqlite_database)|load_state Dojo
 
 2. [Andela](https://www.andela.com) community.
 
-3. [Andela 21] community.
+3. [Andela 21](https://www.andela.com) community.
 
 
 ## License
 
 ### The MIT License (MIT)
 
-Copyright (c) 2017 [JImmy Kimani(https://github.com/jimmykimani).
+Copyright (c) 2017 [JImmy Kimani](https://github.com/jimmykimani).
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
