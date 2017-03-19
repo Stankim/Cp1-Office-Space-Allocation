@@ -13,6 +13,7 @@ class Person(object):
     def __init__(self, name, wants_accomodation):
         self.name = name
         self.wants_accomodation = wants_accomodation
+        self.office = None
 
     def __repr__(self):
         return '<Person %s>' % self.name

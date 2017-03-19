@@ -107,7 +107,7 @@ class Dojo(object):
                     self.vacant_livingspace.remove(livingspace)
                     self.vacant_rooms.remove(livingspace)
 
-    def add_person(self, name, category, wants_accomodation='N'):
+    def add_person(self, name, category, wants_accomodation):
         '''
         This function creates a person and allocates
         the person to a random room
@@ -328,24 +328,24 @@ class Dojo(object):
         if new_room_name not in [room.name for room in self.all_rooms]:
             click.secho('The room %s does not exist.'%(new_room_name),bold=True, fg='red')
             return
-        if new_person.wants_accomodation == 'N' and new_room in self.livingspace:
-                click.secho("without accomodation you can't be allocated livingspaces." ,bold=True, fg='red')
-                return
-        # lets not add a staff to a livingspace
-        # check new_person in staff list
+ 
         if new_person in self.staff and new_room in self.livingspace:
                 click.secho("Staff members can't be allocated livingspaces." ,bold=True, fg='red')
                 return
-        # checks if person added actually has been alloacted a room
         for room in self.vacant_rooms:
             if new_person.name in [person.name for person in room.members]:
                 if new_room == room:
                     # lets not allocate new_person to the same room
                     click.secho('The person is already a member of room %s.' %(new_room.name),bold=True, fg='red')
-                    return
-                else:
-                    # remove person from the current room 
-                    room.members.remove(new_person)
+        for room in self.vacant_offices:
+             if new_person.name in [person.name for person in room.members]:
+                 for r in self.vacant_livingspace:
+                     if new_room == r:
+                         click.secho("Cannot reallocate from office to livingspace or vice versa" ,bold=True, fg='red')
+                         return
+        else:
+            # remove person from the current room 
+            room.members.remove(new_person)
         # add new_person to  new room
         new_room.members.append(new_person)
         # add person to all_people list
@@ -430,7 +430,14 @@ class Dojo(object):
                     livingspace_allocated = "no room"
                 else:
                   livingspace_allocated= person.livingspace.name
-                accomodation = person.wants_accomodation
+                if person.wants_accomodation is None:
+                    person.wants_accomodation = 'Y'
+                else:
+                    accomodation = person.wants_accomodation
+                for p in self.unallocated:
+                    if person == p:
+                        office_allocated = 'Unallocated'
+                        livingspace_allocated = 'Unalloacted'
                 new_p = Persons(
                     name=person.name,
                     category=person.person_type,
@@ -440,8 +447,9 @@ class Dojo(object):
                 # add new person to db
                 session.add(new_p)
                 session.commit()
-                message = "Data added to {} database successfully"
-                click.secho(message, fg='green', bold=True)   
+        message = "Data added to %s database successfully" %(db_name)
+        click.secho(message, fg='green', bold=True)
+        return
 
     def load_state(self, db_name):
         '''
