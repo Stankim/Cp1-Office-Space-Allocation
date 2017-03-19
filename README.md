@@ -15,6 +15,7 @@ The The Dojo Office Space Allocation allocates people either The Living Space or
 A room can be allocated **ONLY** to a staff or a fellow at Andela. Staff cannot be allocated living spaces.
  Fellows have a choice to choose a living space or not.
 
+>The project is done in fulfillment of the Andela 21 project 2017
 
 ## 1 Installation
 
@@ -145,7 +146,6 @@ This commands prints room details.
 
 It accepts a room name then querries System and returns
 information about the room given.
-given.
 ```
 The Dojo > print_room hogwarts
 PRINTING ROOM HOGWARTS  ...
