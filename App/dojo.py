@@ -328,9 +328,13 @@ class Dojo(object):
         if new_room_name not in [room.name for room in self.all_rooms]:
             click.secho('The room %s does not exist.'%(new_room_name),bold=True, fg='red')
             return
+
+        for room in self.all_rooms:
+            self.check_room_is_vacant()
+            vacant_rooms = self.vacant_offices + self.vacant_livingspace
  
-        if new_person in self.staff and new_room in self.livingspace:
-                click.secho("Staff members can't be allocated livingspaces." ,bold=True, fg='red')
+        if new_person in self.staff or self.office and new_room in self.livingspace:
+                click.secho("members without accomodation can't be allocated livingspaces." ,bold=True, fg='red')
                 return
         
         for room in self.all_rooms:
@@ -338,30 +342,12 @@ class Dojo(object):
                 if new_room == room:
                     # lets not allocate new_person to the same room
                     click.secho('The person is already a member of room %s.' %(new_room.name),bold=True, fg='red')
-                    return
+                    # return
                 else:
                     room.members.remove(new_person)
-            
-        for room in self.vacant_offices:
-            if new_person.name in [person.name for person in room.members]:
-                for r in self.vacant_livingspace:
-                    if new_room == r:
-                         click.secho("Cannot reallocate from office to livingspace or vice versa" ,bold=True, fg='red')
-                    else:
-                        room.members.remove(new_person)
-        # if self.office and self.livingspace:
-    
-        #     self.check_room_is_vacant()
-        #     if not self.vacant_livingspace and self.vacant_offices:
-        #         print('room full')
-        #     else:
-            
         self.check_room_is_vacant()
-        if not self.vacant_rooms:
-            print(' not vail')
-        else:
-            
-            
+        vacant_rooms = self.vacant_offices + self.vacant_livingspace
+        if new_room in vacant_rooms:
             new_room.members.append(new_person)
             # add person to all_people list
             self.all_people.append(new_person)
@@ -374,6 +360,8 @@ class Dojo(object):
             # reallocate members who dont have allocations to vacant rooms
             if new_person in self.unallocated:
                 self.unallocated.remove(new_person)
+        else:
+            print('That room is already full and cannot be added')
 
                     
     def load_people(self, filename):
