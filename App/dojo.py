@@ -558,14 +558,16 @@ class Dojo(object):
                     self.fellows.append(person_obj)
                     self.all_people.append(person_obj)
 
-                # if role == 'Fellow':
-                #     p = Fellow(person)
-                #     if office_allocated == 'Unallocated':
-                #         self.unallocated.append(p)
-                # if office_allocated == 'Unallocated':
+                if role == 'Fellow' or "Staff":
+                    p = Fellow(person)
+                    if office_allocated == 'Unallocated':
+                        self.unallocated.append(p)
+                    elif livingspace_allocated == 'Unallocated':
+                        self.unallocated.append(p)
+                        
                     
 
-                print('Load successful!')    
+            print('Load successful!')    
 
         
 
