@@ -332,7 +332,8 @@ class Dojo(object):
         if new_person in self.staff and new_room in self.livingspace:
                 click.secho("Staff members can't be allocated livingspaces." ,bold=True, fg='red')
                 return
-        for room in self.vacant_rooms:
+        
+        for room in self.all_rooms:
             if new_person.name in [person.name for person in room.members]:
                 if new_room == room:
                     # lets not allocate new_person to the same room
@@ -340,6 +341,7 @@ class Dojo(object):
                     return
                 else:
                     room.members.remove(new_person)
+            
         for room in self.vacant_offices:
             if new_person.name in [person.name for person in room.members]:
                 for r in self.vacant_livingspace:
@@ -347,20 +349,31 @@ class Dojo(object):
                          click.secho("Cannot reallocate from office to livingspace or vice versa" ,bold=True, fg='red')
                     else:
                         room.members.remove(new_person)
-        
-        # add new_person to  new room
-        new_room.members.append(new_person)
-        # add person to all_people list
-        self.all_people.append(new_person)
-        # if person is fellow add to fellows list
-        if new_person == 'Fellow':
-            self.fellows.append(new_person)
+        # if self.office and self.livingspace:
+    
+        #     self.check_room_is_vacant()
+        #     if not self.vacant_livingspace and self.vacant_offices:
+        #         print('room full')
+        #     else:
+            
+        self.check_room_is_vacant()
+        if not self.vacant_rooms:
+            print(' not vail')
         else:
-            self.staff.append(new_person)
-        click.secho('%s has been reallocated to %s' %(new_person.name, new_room.name),bold=True, fg='green')
-        # reallocate members who dont have allocations to vacant rooms
-        if new_person in self.unallocated:
-            self.unallocated.remove(new_person)
+            
+            
+            new_room.members.append(new_person)
+            # add person to all_people list
+            self.all_people.append(new_person)
+            # if person is fellow add to fellows list
+            if new_person == 'Fellow':
+                self.fellows.append(new_person)
+            else:
+                self.staff.append(new_person)
+            click.secho('%s has been reallocated to %s' %(new_person.name, new_room.name),bold=True, fg='green')
+            # reallocate members who dont have allocations to vacant rooms
+            if new_person in self.unallocated:
+                self.unallocated.remove(new_person)
 
                     
     def load_people(self, filename):
@@ -368,27 +381,30 @@ class Dojo(object):
         This function loads people from a text
         file and populated the system with members
         '''
-        if filename:
-            with open(filename + '.txt', 'r') as file:
-                # read the file content by line and go through the list
-                # of the file format
-                for line in file:
-                    data = line.split()
-                    first_name = data[0]
-                    second_name = data[1]
-                    name = first_name + ' ' + second_name
-                    category = data[2].lower()
-                    # look for person with accomodation option
-                    if len(data) == 4 :
-                        wants_accomodation = data [3]
-                    # incase there none default "N"
-                    else:
-                        wants_accomodation = 'N'
-                    self.add_person(name.lower(), category,wants_accomodation)
-                    click.secho('Success',fg='green')
-        else:
-            print('please provide a file')
-                 
+        if not os.path.isfile(filename):
+            print("Filename does not exist")
+        else:  
+            if filename:
+                with open(filename, 'r') as file:
+                    # read the file content by line and go through the list
+                    # of the file format
+                    for line in file:
+                        data = line.split()
+                        first_name = data[0]
+                        second_name = data[1]
+                        name = first_name + ' ' + second_name
+                        category = data[2].lower()
+                        # look for person with accomodation option
+                        if len(data) == 4 :
+                            wants_accomodation = data [3]
+                        # incase there none default "N"
+                        else:
+                            wants_accomodation = 'N'
+                        self.add_person(name.lower(), category,wants_accomodation)
+                        click.secho('Success',fg='green')
+            else:
+                print('please provide a file')
+                    
     def save_state(self,db_name='dojo'):
         '''
         Persists all the data stored in the app to a 
@@ -396,6 +412,11 @@ class Dojo(object):
         explicitly stores the data in the sqlite_database 
         specified. 
         '''
+        try:
+            os.remove('%s' % db_name)
+        except Exception as e:
+            pass
+
         # create engine
         engine = create_db(db_name)
         # connect to db
@@ -555,7 +576,8 @@ class Dojo(object):
                 #         self.unallocated.append(p)
                 # if office_allocated == 'Unallocated':
                     
-            print('Load successful!')    
+
+                print('Load successful!')    
 
         
 
