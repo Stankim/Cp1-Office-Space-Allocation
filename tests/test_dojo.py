@@ -216,7 +216,7 @@ class TestDojo(unittest.TestCase):
         fellows = self.dojo.fellows
         self.assertEqual(len(staff), 0)
         self.assertEqual(len(fellows), 0)
-        self.dojo.load_people("sample")
+        self.dojo.load_people("sample.txt")
         self.assertEqual(len(staff), 3)
         self.assertEqual(len(fellows), 4)
 

@@ -328,15 +328,12 @@ class Dojo(object):
         if new_room_name not in [room.name for room in self.all_rooms]:
             click.secho('The room %s does not exist.'%(new_room_name),bold=True, fg='red')
             return
-
-        for room in self.all_rooms:
-            self.check_room_is_vacant()
-            vacant_rooms = self.vacant_offices + self.vacant_livingspace
  
         if new_person in self.staff or self.office and new_room in self.livingspace:
                 click.secho("members without accomodation can't be allocated livingspaces." ,bold=True, fg='red')
                 return
-        
+
+            
         for room in self.all_rooms:
             if new_person.name in [person.name for person in room.members]:
                 if new_room == room:
@@ -564,9 +561,6 @@ class Dojo(object):
                         self.unallocated.append(p)
                     elif livingspace_allocated == 'Unallocated':
                         self.unallocated.append(p)
-                        
-                    
-
             print('Load successful!')    
 
         
