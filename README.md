@@ -24,6 +24,9 @@ Clone this repo:
 ```
 $ git clone https://github.com/jimmykimani/Office-Space-Allocation.git
 ```
+```
+$ git checkout develop
+```
 
 Navigate to the `Office-Space-Allocation.` directory:
 ```
